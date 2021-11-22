@@ -27,12 +27,12 @@ price(kentang, 7).
 price(bawang, 15).
 price(tomat, 8).
 	
-inventory(fishing_rod_1,equipment,0).
-inventory(fishing_rod_2,equipment,0).
-inventory(fishing_rod_3,equipment,0).
-inventory(hoe_1,equipment,0).
-inventory(hoe_2,equipment,0).
-inventory(hoe_3,equipment,0).
-inventory(watering_1,equipment,0).
-inventory(watering_2,equipment,0).
-inventory(watering_3,equipment,0).
+inventory(fishing_rod,equipment,0).
+inventory(shovel,equipment,0).
+inventory(watering,equipment,0).
+
+inventory(bibit_wortel, seed, 0).
+inventory(bibit_lobak, seed, 0).
+inventory(bibit_kentang, seed, 0).
+inventory(bibit_bawang, seed, 0).
+inventory(bibit_tomat, seed, 0).

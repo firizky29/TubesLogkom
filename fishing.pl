@@ -2,7 +2,19 @@
 
 
 isAroundWater(I,J,Bool):-
-    tile(I,J,Type),
+    tile(I-1,J,Type),
+    Type == water,
+    Bool = true.
+isAroundWater(I,J,Bool):-
+    tile(I+1,J,Type),
+    Type == water,
+    Bool = true.
+isAroundWater(I,J,Bool):-
+    tile(I,J-1,Type),
+    Type == water,
+    Bool = true.
+isAroundWater(I,J,Bool):-
+    tile(I,J+1,Type),
     Type == water,
     Bool = true.
 

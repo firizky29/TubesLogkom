@@ -31,8 +31,8 @@ inventory(fishing_rod,equipment,0).
 inventory(shovel,equipment,0).
 inventory(watering,equipment,0).
 
-inventory(wortel_seed, seed, 0).
-inventory(lobak_seed, seed, 0).
-inventory(kentang_seed, seed, 0).
-inventory(bawang_seed, seed, 0).
-inventory(tomat_seed, seed, 0).
+inventory(bibit_wortel, seed, 0).
+inventory(bibit_lobak, seed, 0).
+inventory(bibit_kentang, seed, 0).
+inventory(bibit_bawang, seed, 0).
+inventory(bibit_tomat, seed, 0).

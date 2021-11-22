@@ -19,7 +19,7 @@ reqexp(10, 204500).
 w :-
     playerLoc(X, Y),
     (X =:= 1),
-    write('You cant go beyond borders'), nl, !.
+    write('You can\'t go beyond borders'), nl, !.
 
 w:-
     playerLoc(X, Y),
@@ -41,7 +41,7 @@ s :-
     playerLoc(X, Y),
     heightMap(H),
     (X =:= (H-2)),
-    write('You cant go beyond borders'), nl, !.
+    write('You can\'t go beyond borders'), nl, !.
 
 s:-
     playerLoc(X, Y),
@@ -62,7 +62,7 @@ s:-
 a :-
     playerLoc(X, Y),
     (Y =:= 1),
-    write('You cant go beyond borders'), nl, !.
+    write('You can\'t go beyond borders'), nl, !.
 
 a:-
     playerLoc(X, Y),
@@ -85,7 +85,7 @@ d :-
     playerLoc(X, Y),
     heightMap(H),
     (Y =:= H-2),
-    write('You cant go beyond borders'), nl, !.
+    write('You can\'t go beyond borders'), nl, !.
 
 d:-
     playerLoc(X, Y),

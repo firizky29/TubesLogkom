@@ -3,7 +3,6 @@
 :- dynamic(playerLoc/2).
 :- dynamic(tile/3).
 :- dynamic(hasActiveQuest/1).
-:- include('lib.pl').
 
 
 % idTile(0, border).
@@ -67,6 +66,8 @@ buildMap:-
             asserta(tile(X1, Y1, empty))
         ))
     )),
+
+    % Generate player location and home
     Wmax2 is (W-3),
     random(1, Hmax1, X2),
     random(1, Wmax2, Y2),
@@ -77,6 +78,8 @@ buildMap:-
     asserta(tile(X2, YH, house)),
     retract(tile(X2, Y2, _)),
     asserta(tile(X2, Y2, player)).
+
+        
 
 % % generate pond (under construction)
 % random(1, Wmax1, X1),

@@ -33,6 +33,8 @@ initMap:-
     asserta(widthMap(W)),
     retract(heightMap(_)),
     asserta(heightMap(H)),
+    retractall(listOfEmptyTile(_)),
+    asserta(listOfEmptyTile([])),
     buildMap, !.
 
 buildMap:-
@@ -72,13 +74,40 @@ buildMap:-
     buildPond(X1, Y1),
     forall(between(1, Hmax1, X2), (
         forall((between(1, Wmax1, Y2), tile(X2, Y2, empty)),(
-
             listOfEmptyTile(L),
             append(L, [(X2, Y2)], L_New),
             asserta(listOfEmptyTile(L_New)),
             retract(listOfEmptyTile(L))    
         ))    
-    )), !.
+    )), 
+
+    % build house
+    listOfEmptyTile(T1),
+    length(T1, Len1),
+    random(0, Len1, IdxHome),
+    deleteAt(T1, (XH, YH), IdxHome, T2),
+    retract(tile(XH, YH, _)),
+    asserta(tile(XH, YH, house)),
+
+    % player
+    initPlayerLoc, 
+
+    % build market
+    length(T2, Len2),
+    random(0, Len2, IdxMarket),
+    deleteAt(T2, (XM, YM), IdxMarket, T3),
+    retract(tile(XM, YM, _)),
+    asserta(tile(XM, YM, marktetplace)),
+
+    % build ranch
+    length(T3, Len3),
+    random(0, Len3, IdxRanch),
+    deleteAt(T3, (XR, YR), IdxRanch, T4),
+    retract(tile(XR, YR, _)),
+    asserta(tile(XR, YR, ranch)),
+
+
+    !.
     % Generate player location and home
     % Wmax2 is (W-3),
     % random(1, Hmax1, X2),
@@ -86,17 +115,80 @@ buildMap:-
     % retract(playerLoc(_, _)),
     % asserta(playerLoc(X2,Y2)),
     % YH is Y2 + 1,
-    % retract(tile(X2, YH, _)),
-    % asserta(tile(X2, YH, house)),
-    % retract(tile(X2, Y2, _)),
-    % asserta(tile(X2, Y2, player)).
+    
 
 
 
-% % generate pond (under construction)
-% random(1, Wmax1, X1),
-% random(1, Hmax1, Y1),
-% buildPond(X1, Y1).
+% pleyerPos():-
+
+initPlayerLoc:-
+    tile(X, Y, house),
+    playerLoc(XP, YP),
+    Y1 is Y-1,
+    tile(X, Y1, empty),
+    retract(tile(X,Y1,empty)),
+    asserta(tile(XP, YP, empty)),
+    asserta(tile(X, Y1, player)),
+    retract(playerLoc(_, _)),
+    asserta(playerLoc(X, Y)), !.
+
+initPlayerLoc:-
+    tile(X, Y, house),
+    playerLoc(XP, YP),
+    Y1 is Y+1,
+    tile(X, Y1, empty),
+    retract(tile(X,Y1,empty)),
+    asserta(tile(XP, YP, empty)),
+    asserta(tile(X, Y1, player)), 
+    retract(playerLoc(_, _)),
+    asserta(playerLoc(X, Y)),
+    !.
+
+
+initPlayerLoc:-
+    tile(X, Y, house),
+    playerLoc(XP, YP),
+    X1 is X-1,
+    tile(X1, Y, empty),
+    retract(tile(X1,Y,empty)),
+    asserta(tile(XP, YP, empty)),
+    asserta(tile(X1, Y, player)), 
+    retract(playerLoc(_, _)),
+    asserta(playerLoc(X, Y)),
+    !.
+
+
+initPlayerLoc:-
+    tile(X, Y, house),
+    playerLoc(XP, YP),
+    X1 is X+1,
+    tile(X1, Y, empty),
+    retract(tile(X1,Y,empty)),
+    asserta(tile(XP, YP, empty)),
+    asserta(tile(X1, Y, player)), 
+    retract(playerLoc(_, _)),
+    asserta(playerLoc(X, Y)),
+    !.
+
+
+
+setPlayerLoc(X, Y):-
+    tile(X, Y, empty),
+    playerLoc(XP, YP),
+    retract(tile(XP,YP,player)),
+    retract(tile(X,Y,empty)),
+    asserta(tile(XP, YP, empty)),
+    asserta(tile(X, Y, player)), 
+    retract(playerLoc(XP, YP)),
+    asserta(playerLoc(X, Y)),
+    !.
+
+setPlayerLoc(X, Y):-
+    tile(X, Y, _),
+    retract(playerLoc(_, _)),
+    asserta(playerLoc(X, Y)),
+    !.
+
 radBound(X, Y):-
     widthMap(W),
     heightMap(H),
@@ -107,8 +199,6 @@ radBound(X, Y):-
     !.
 
 radBound(X, Y):-
-    widthMap(W),
-    heightMap(H),
     X is 2, 
     Y is 4,
     !.
@@ -116,8 +206,6 @@ radBound(X, Y):-
 
 
 buildPond(X, Y):-
-    widthMap(W),
-    heightMap(H),
     radBound(X1, Y1),
     random(X1, Y1, Radius),
     Ymin is Y-Radius,

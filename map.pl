@@ -3,17 +3,9 @@
 :- dynamic(playerLoc/2).
 :- dynamic(tile/3).
 :- dynamic(hasActiveQuest/1).
+:- dynamic(listOfEmptyTile/1).
+:- include('lib.pl').
 
-
-% idTile(0, border).
-% idTile(1, player).
-% idTile(2, empty).
-% idTile(3, marktetplace).
-% idTile(4, ranch).
-% idTile(5, house).
-% idTile(6, quest).
-% idTile(7, water).
-% idTile(8, digged).
 
 tileSymbol(border, '#').
 tileSymbol(player, 'P').
@@ -30,12 +22,13 @@ heightMap(0).
 hasActiveQuest(0).
 tile(0, 0, 0).
 playerLoc(0, 0).
+listOfEmptyTile([]).
 
 
 
 initMap:-
-    random(10, 30, W),
-    random(10, 30, H),
+    random(10, 32, W),
+    random(10, 32, H),
     retract(widthMap(_)),
     asserta(widthMap(W)),
     retract(heightMap(_)),
@@ -67,53 +60,77 @@ buildMap:-
         ))
     )),
 
-    % Generate player location and home
-    Wmax2 is (W-3),
-    random(1, Hmax1, X2),
-    random(1, Wmax2, Y2),
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X2,Y2)),
-    YH is Y2 + 1,
-    retract(tile(X2, YH, _)),
-    asserta(tile(X2, YH, house)),
-    retract(tile(X2, Y2, _)),
-    asserta(tile(X2, Y2, player)).
+    % generate pond
+    PondW is (W-4),
+    PondH is (H-4),
+    Xmin1 is min(4, PondW),
+    Xmax1 is max(4, PondW),
+    Ymin1 is min(4, PondH),
+    Ymax1 is max(4, PondH),
+    random(Xmin1, Xmax1, X1),
+    random(Ymin1, Ymax1, Y1),
+    buildPond(X1, Y1),
+    forall(between(1, Hmax1, X2), (
+        forall((between(1, Wmax1, Y2), tile(X2, Y2, empty)),(
 
-        
+            listOfEmptyTile(L),
+            append(L, [(X2, Y2)], L_New),
+            asserta(listOfEmptyTile(L_New)),
+            retract(listOfEmptyTile(L))    
+        ))    
+    )), !.
+    % Generate player location and home
+    % Wmax2 is (W-3),
+    % random(1, Hmax1, X2),
+    % random(1, Wmax2, Y2),
+    % retract(playerLoc(_, _)),
+    % asserta(playerLoc(X2,Y2)),
+    % YH is Y2 + 1,
+    % retract(tile(X2, YH, _)),
+    % asserta(tile(X2, YH, house)),
+    % retract(tile(X2, Y2, _)),
+    % asserta(tile(X2, Y2, player)).
+
+
 
 % % generate pond (under construction)
 % random(1, Wmax1, X1),
 % random(1, Hmax1, Y1),
 % buildPond(X1, Y1).
+radBound(X, Y):-
+    widthMap(W),
+    heightMap(H),
+    Bound is W*H,
+    Bound =< 200,
+    X is 2, 
+    Y is 3,
+    !.
+
+radBound(X, Y):-
+    widthMap(W),
+    heightMap(H),
+    X is 2, 
+    Y is 4,
+    !.
+
 
 
 buildPond(X, Y):-
     widthMap(W),
     heightMap(H),
-    random(15, 20, Percentage1),
-    UpperRadius is Y-((Percentage1*Y) div 100),
-    random(15, 20, Percentage2),
-    BottomRadius is Y+((Percentage2*(H-Y)) div 100),
-    random(15, 20, Percentage3),
-    MinRightRadius is X+((Percentage3*(W-X)) div 100),
-    random(21, 30, Percentage4),
-    MinLeftRadius is X-((Percentage4*X) div 100),
-    random(21, 30, Percentage5),
-    MaxRightRadius is (X+(Percentage5*(W-X)) div 100),
-    random(15, 20, Percentage6),
-    MaxLeftRadius is X-((Percentage6*X) div 100),
-    write(MinLeftRadius), nl, write(MaxLeftRadius), nl,
-    write(MinRightRadius), nl, write(MaxRightRadius), nl,
-    forall(between(UpperRadius, BottomRadius, I),(
-        random(MinLeftRadius, MaxLeftRadius, Left),
-        random(MinRightRadius, MaxRightRadius, Right),
-        write(Left), write(' '), write(Right), nl,
-        forall(between(Left, Right, J),(
+    radBound(X1, Y1),
+    random(X1, Y1, Radius),
+    Ymin is Y-Radius,
+    Ymax is Y+Radius,
+    forall(between(Ymin, Ymax, I), (
+        Xmin is floor(X - sqrt(Radius*Radius-(I-Y)*(I-Y))),
+        Xmax is floor(X + sqrt(Radius*Radius-(I-Y)*(I-Y))),
+        forall(between(Xmin, Xmax, J), (
             retract(tile(I, J, _)),
             asserta(tile(I, J, water))
         ))
-    )).
-
+    )),
+    !.
     
 
 map:-

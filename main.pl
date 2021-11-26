@@ -1,7 +1,9 @@
 :- dynamic(carrot_seed / 1).
 :- dynamic(gameState / 1). /* gameState(isGameOn/Off) */
+:- dynamic(money / 1).
 :- include('map.pl').
 
+money(0).
 gameState(0).
 
 turnOnGame :-

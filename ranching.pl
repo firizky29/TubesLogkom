@@ -1,13 +1,14 @@
 :- include('map.pl').
 :- dynamic(animal_count/2).
 :- dynamic(last_ranch_visit/1).
-ranch_animal(chicken).
-ranch_animal(cow).
-ranch_animal(sheep).
 
-animal_count(chicken,0).
-animal_count(cow,0).
-animal_count(sheep,0).
+ranch_animal(ayam).
+ranch_animal(sapi).
+ranch_animal(domba).
+
+animal_count(ayam,0).
+animal_count(sapi,0).
+animal_count(domba,0).
 
 last_ranch_visit(0).
 
@@ -21,15 +22,15 @@ ranch :-
           ),
     write('What do you want to do?'),nl.
 
-chicken :-
+ayam :-
     tile(X,Y,ranch).
-    % gotta research how chicken reproduce
+    % gotta research how ayam reproduce
 
-sheep :-
+domba :-
     tile(X,Y,ranch).
-    % gotta research how sheep reproduce
+    % gotta research how domba reproduce
 
-cow :-
+sapi :-
     tile(X,Y,ranch).
-    % gotta research how cows reproduce
+    % gotta research how sapis reproduce
     

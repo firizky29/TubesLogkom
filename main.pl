@@ -71,7 +71,7 @@ help :-
 
 help :-
     inGameState(0),
-    write('\ntype \'start' if you wish to play the game\n'), !.
+    write('\ntype \'start\' if you wish to play the game\n'), !.
 
 help :-
     write('this is your list of commands, have fun!'), nl,
@@ -90,4 +90,31 @@ help :-
     write('12. harvest      : '), nl,
     write('13. inventory    : '), nl,
     write('14. status       : '), !.
+
+status :-
+    write('this is your current status, keep up your good work and have fun!\n'),
+    write('=================================================================\n'),
+    playerRole(Role),
+    roleDisplay(Role, PlayerRole),
+    playerLevel(Level),
+    fishingExp(FishExp),
+    farmingExp(FarmExp),
+    ranchingExp(RanchExp),
+    fishingLevel(FishLevel),
+    ranchingLevel(RanchLevel),
+    farmingLevel(FarmLevel),
+    money(Gold),
+    playerExp(Exp),
+    reqexp(Level, ReqExp),
+    
+    write('Job              : '), write(PlayerRole), nl,
+    write('Level            : '), write(Level), nl,
+    write('Farming level    : '), write(FarmLevel), nl,
+    write('Farming Exp      : '), write(FarmExp), nl,
+    write('Fishing level    : '), write(FishLevel), nl,
+    write('Fishing Exp      : '), write(FishExp), nl,
+    write('Ranching level   : '), write(RanchLevel), nl,
+    write('Ranching Exp     : '), write(RanchExp), nl,
+    write('Exp              : '), write(Exp), write('/'), write(ReqExp), nl,
+    write('Gold             : '), write(Gold), nl, !.
 

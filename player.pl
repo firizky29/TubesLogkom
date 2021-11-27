@@ -8,6 +8,7 @@
 :- dynamic(ranchingLevel/1).
 :- dynamic(farmingLevel/1).
 :- dynamic(money/1).
+:- dynamic(playerExp/1).
 :- include('map.pl').
 
 playerLevel(0).
@@ -18,11 +19,15 @@ fishingLevel(0).
 ranchingLevel(0).
 farmingLevel(0).
 money(0).
+playerExp(0).
 
 % fakta-fakta dari player
 idRole(1, fisherman).
 idRole(2, farmer).
 idRole(3, rancher).
+roleDisplay(fisherman, 'Fisherman').
+roleDisplay(farmer, 'Farmer').
+roleDisplay(rancher, 'Rancher').
 % reqexp(level, N) : reqierementXP
 
 reqexp(0, 0).
@@ -136,7 +141,7 @@ initPlayer(Idx):-
     idRole(Idx, Role),
     asserta(playerRole(Role)), 
     retract(playerLevel(_)),
-    asserta(playerLevel(0)),
+    asserta(playerLevel(1)),
     retract(fishingExp(_)),
     asserta(fishingExp(0)),
     retract(farmingExp(_)),
@@ -151,6 +156,8 @@ initPlayer(Idx):-
     asserta(ranchingLevel(0)),
     retract(money(_)),
     asserta(money(1000)),
+    retract(playerExp(_)),
+    asserta(playerExp(0)),
     !.
 
 printRole(Idx):-

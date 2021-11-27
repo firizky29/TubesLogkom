@@ -8,7 +8,7 @@
 
 tileSymbol(border, '#').
 tileSymbol(empty, '-').
-tileSymbol(marktetplace, 'M').
+tileSymbol(marketplace, 'M').
 tileSymbol(ranch, 'R').
 tileSymbol(house, 'H').
 tileSymbol(quest, 'Q').
@@ -103,7 +103,7 @@ buildMap:-
     deleteAt(T2, (XM, YM), IdxMarket, L2),
     deleteNeighborof(XM, YM, L2, T3),
     retract(tile(XM, YM, _)),
-    asserta(tile(XM, YM, marktetplace)),
+    asserta(tile(XM, YM, marketplace)),
 
     % build ranch
     length(T3, Len3),
@@ -233,7 +233,7 @@ printInfoMap:-
     write('\nLegend:\n=============================================\n'),
     write('P : Your current position\n'),
     write('H : Your house\n'),
-    write('M : Marktetplace\n'),
+    write('M : marketplace\n'),
     write('R : Ranch\n'),
     write('Q : Active quest\n'),
     write('o : Water\n'), !.
@@ -244,14 +244,14 @@ printInfoMap:-
     write('\nYou\'re currently inside your HOUSE!\n'),
     write('\nLegend:\n=============================================\n'),
     write('P : Your current position\n'),
-    write('M : Marktetplace\n'),
+    write('M : marketplace\n'),
     write('R : Ranch\n'),
     write('Q : Active quest\n'),
     write('o : Water\n'), !.
 
 printInfoMap:-
     playerLoc(XP, YP),
-    tile(XP, YP, marktetplace),
+    tile(XP, YP, marketplace),
     write('\nYou\'re in the marketplace, you can buy something if you want!\n'),
     write('\nLegend:\n=============================================\n'),
     write('P : Your current position\n'),
@@ -267,7 +267,7 @@ printInfoMap:-
     write('\nLegend:\n=============================================\n'),
     write('P : Your current position\n'),
     write('H : Your house\n'),
-    write('M : Marktetplace\n'),
+    write('M : marketplace\n'),
     write('Q : Active quest\n'),
     write('o : Water\n'), !.
 
@@ -278,7 +278,7 @@ printInfoMap:-
     write('\nLegend:\n=============================================\n'),
     write('P : Your current position\n'),
     write('H : Your house\n'),
-    write('M : Marktetplace\n'),
+    write('M : marketplace\n'),
     write('R : Ranch\n'),
     write('o : Water\n'), !.
 

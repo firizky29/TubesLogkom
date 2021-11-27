@@ -26,15 +26,15 @@ buy :-
     playerLoc(X,Y),
     tile(X,Y,marketplace),
     write('What do you want to buy?'), nl,
-    price(wortel, PRICE_WORTEL),
+    price(bibit_wortel, PRICE_WORTEL),
     write('1. Bibit wortel ('), write(PRICE_WORTEL), write(' golds)'), nl,
-    price(lobak, PRICE_LOBAK),
+    price(bibit_lobak, PRICE_LOBAK),
     write('2. Bibit lobak ('), write(PRICE_LOBAK), write(' golds)'), nl,
-    price(kentang, PRICE_KENTANG),
+    price(bibit_kentang, PRICE_KENTANG),
     write('3. Bibit kentang ('), write(PRICE_KENTANG), write(' golds)'), nl,
-    price(bawang, PRICE_BAWANG),
+    price(bibit_bawang, PRICE_BAWANG),
     write('4. Bibit bawang ('), write(PRICE_BAWANG), write(' golds)'), nl,
-    price(tomat, PRICE_TOMAT),
+    price(bibit_tomat, PRICE_TOMAT),
     write('5. Bibit tomat ('), write(PRICE_TOMAT), write(' golds)'), nl, 
     price(ayam, PRICE_AYAM),
     write('6. Ayam ('), write(PRICE_AYAM), write(' golds)'), nl,
@@ -123,7 +123,7 @@ writeinvent(NAME, COUNT) :-
     COUNT > 0,
     write('-  '), write(COUNT), write(' '), write(NAME), nl. 
 
-writeinvent(NAME, COUNT) :-
+writeinvent(_, _) :-
     !. 
 
 tampilinventory :- 

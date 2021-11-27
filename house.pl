@@ -24,6 +24,6 @@ sleep :-
     write('Sudah hari ke-'), write(Y), write('.'),
     house.
 
-writeDiary :-.
+writeDiary :- !.
 
-readDiary :-.
+readDiary :- !.

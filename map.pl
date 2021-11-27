@@ -2,13 +2,11 @@
 :- dynamic(heightMap/1).
 :- dynamic(playerLoc/2).
 :- dynamic(tile/3).
-:- dynamic(hasActiveQuest/1).
 :- dynamic(listOfEmptyTile/1).
 :- include('lib.pl').
 
 
 tileSymbol(border, '#').
-tileSymbol(player, 'P').
 tileSymbol(empty, '-').
 tileSymbol(marktetplace, 'M').
 tileSymbol(ranch, 'R').
@@ -19,7 +17,6 @@ tileSymbol(digged, '=').
 
 widthMap(0).
 heightMap(0).
-hasActiveQuest(0).
 tile(0, 0, 0).
 playerLoc(0, 0).
 listOfEmptyTile([]).
@@ -27,10 +24,10 @@ listOfEmptyTile([]).
 
 
 initMap:-
-    % random(10, 32, W),
-    % random(10, 32, H),
-    W is 30,
-    H is 25,
+    random(10, 32, W),
+    random(10, 32, H),
+    % W is 10,
+    % H is 10,
     retract(widthMap(_)),
     asserta(widthMap(W)),
     retract(heightMap(_)),
@@ -90,115 +87,92 @@ buildMap:-
     listOfEmptyTile(T1),
     length(T1, Len1),
     random(0, Len1, IdxHome),
-    deleteAt(T1, (XH, YH), IdxHome, T2),
-    % XH1 is XH-1,
-    % XH2 is XH+1,
-    % YH1 is YH-1,
-    % YH2 is YH+1,
-    % delete(L1, (XH1, XH), T2),
+    deleteAt(T1, (XH, YH), IdxHome, L1),
+    deleteNeighborof(XH, YH, L1, T2),
+
     retract(tile(XH, YH, _)),
     asserta(tile(XH, YH, house)),
 
     % player
-    initPlayerLoc, 
+    retract(playerLoc(_, _)),
+    asserta(playerLoc(XH, YH)),
 
     % build market
     length(T2, Len2),
     random(0, Len2, IdxMarket),
-    deleteAt(T2, (XM, YM), IdxMarket, T3),
+    deleteAt(T2, (XM, YM), IdxMarket, L2),
+    deleteNeighborof(XM, YM, L2, T3),
     retract(tile(XM, YM, _)),
     asserta(tile(XM, YM, marktetplace)),
 
     % build ranch
     length(T3, Len3),
     random(0, Len3, IdxRanch),
-    deleteAt(T3, (XR, YR), IdxRanch, T4),
+    deleteAt(T3, (XR, YR), IdxRanch, L3),
+    deleteNeighborof(XR, YR, L3, T4),
     retract(tile(XR, YR, _)),
     asserta(tile(XR, YR, ranch)),
 
+    length(T4, Len4),
+    random(0, Len4, IdxQuest),
+    deleteAt(T4, (XQ, YQ), IdxQuest, L4),
+    deleteNeighborof(XQ, YQ, L4, T5),
+    retract(tile(XQ, YQ, _)),
+    asserta(tile(XQ, YQ, quest)),
+
     retract(listOfEmptyTile(_)),
-    asserta(listOfEmptyTile(T4)),
+    asserta(listOfEmptyTile(T5)),
+
+    % TODO: Initialize First Quest
+    % TODO: mekanisme Quest
 
     !.
-    % Generate player location and home
-    % Wmax2 is (W-3),
-    % random(1, Hmax1, X2),
-    % random(1, Wmax2, Y2),
-    % retract(playerLoc(_, _)),
-    % asserta(playerLoc(X2,Y2)),
-    % YH is Y2 + 1,
     
-
-
-
-% pleyerPos():-
-
-initPlayerLoc:-
-    tile(X, Y, house),
-    playerLoc(XP, YP),
-    Y1 is Y-1,
-    tile(X, Y1, empty),
-    retract(tile(X,Y1,empty)),
-    asserta(tile(XP, YP, empty)),
-    asserta(tile(X, Y1, player)),
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y)), !.
-
-initPlayerLoc:-
-    tile(X, Y, house),
-    playerLoc(XP, YP),
-    Y1 is Y+1,
-    tile(X, Y1, empty),
-    retract(tile(X,Y1,empty)),
-    asserta(tile(XP, YP, empty)),
-    asserta(tile(X, Y1, player)), 
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y)),
+generateNewQuestPlace:-
+    tile(XQ, YQ, Quest),
+    returnDeletedCoordinate(XQ, YQ),
+    listOfEmptyTile(L),
+    length(L, Len),
+    random(0, Len, IdxQuest),
+    deleteAt(L, (XQ, YQ), IdxQuest, T),
+    deleteNeighborof(XQ, YQ, T, Res),
+    retract(tile(XQ, YQ, _)),
+    asserta(tile(XQ, YQ, quest)),
+    retract(listOfEmptyTile(_)),
+    asserta(listOfEmptyTile(Res)),
     !.
 
 
-initPlayerLoc:-
-    tile(X, Y, house),
-    playerLoc(XP, YP),
+deleteNeighborof(X, Y, L, Res):-
     X1 is X-1,
-    tile(X1, Y, empty),
-    retract(tile(X1,Y,empty)),
-    asserta(tile(XP, YP, empty)),
-    asserta(tile(X1, Y, player)), 
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y)),
-    !.
+    X2 is X+1,
+    Y1 is Y-1,
+    Y2 is Y+1,
+    delete(L, (X1, Y), L1),
+    delete(L1, (X1, Y1), L2),
+    delete(L2, (X1, Y2), L3),
+    delete(L3, (X2, Y), L4),
+    delete(L4, (X2, Y1), L5),
+    delete(L5, (X2, Y2), L6),
+    delete(L6, (X, Y1), L7),
+    delete(L7, (X, Y2), Res), !.
 
-
-initPlayerLoc:-
-    tile(X, Y, house),
-    playerLoc(XP, YP),
-    X1 is X+1,
-    tile(X1, Y, empty),
-    retract(tile(X1,Y,empty)),
-    asserta(tile(XP, YP, empty)),
-    asserta(tile(X1, Y, player)), 
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y)),
-    !.
-
-
-
-setPlayerLoc(X, Y):-
-    tile(X, Y, empty),
-    playerLoc(XP, YP),
-    retract(tile(XP,YP,player)),
-    retract(tile(X,Y,empty)),
-    asserta(tile(XP, YP, empty)),
-    asserta(tile(X, Y, player)), 
-    retract(playerLoc(XP, YP)),
-    asserta(playerLoc(X, Y)),
-    !.
-
-setPlayerLoc(X, Y):-
-    tile(X, Y, _),
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y)),
+returnDeletedCoordinate(X, Y):-
+    listOfEmptyTile(L),
+    X1 is X-1,
+    X2 is X+1,
+    Y1 is Y-1,
+    Y2 is Y+1,
+    append(L, (X1, Y), L1),
+    append(L1, (X1, Y1), L2),
+    append(L2, (X1, Y2), L3),
+    append(L3, (X2, Y), L4),
+    append(L4, (X2, Y1), L5),
+    append(L5, (X2, Y2), L6),
+    append(L6, (X, Y1), L7),
+    append(L7, (X, Y2), Res), 
+    retractall(listOfEmptyTile(_)),
+    asserta(listOfEmptyTile(Res)),
     !.
 
 radBound(X, Y):-
@@ -239,21 +213,92 @@ buildPond(X, Y):-
         ))
     )),
     !.
-    
+
+printCoor(X, Y):-
+    playerLoc(XP, YP),
+    X is XP,
+    Y is YP,
+    write('P'),
+    !.
+
+printCoor(X, Y):-
+    tile(X, Y, ID),
+    tileSymbol(ID, CharID),
+    write(CharID),
+    !. 
+
+printInfoMap:-
+    playerLoc(XP, YP),
+    tile(XP, YP, empty),
+    write('\nLegend:\n=============================================\n'),
+    write('P : Your current position\n'),
+    write('H : Your house\n'),
+    write('M : Marktetplace\n'),
+    write('R : Ranch\n'),
+    write('Q : Active quest\n'),
+    write('o : Water\n'), !.
+
+printInfoMap:-
+    playerLoc(XP, YP),
+    tile(XP, YP, house),
+    write('\nYou\'re currently inside your HOUSE!\n'),
+    write('\nLegend:\n=============================================\n'),
+    write('P : Your current position\n'),
+    write('M : Marktetplace\n'),
+    write('R : Ranch\n'),
+    write('Q : Active quest\n'),
+    write('o : Water\n'), !.
+
+printInfoMap:-
+    playerLoc(XP, YP),
+    tile(XP, YP, marktetplace),
+    write('\nYou\'re in the marketplace, you can buy something if you want!\n'),
+    write('\nLegend:\n=============================================\n'),
+    write('P : Your current position\n'),
+    write('H : Your house\n'),
+    write('R : Ranch\n'),
+    write('Q : Active quest\n'),
+    write('o : Water\n'), !.
+
+printInfoMap:-
+    playerLoc(XP, YP),
+    tile(XP, YP, ranch),
+    write('\nYou\'re in the ranch, let\'s take care of the farm-animals!\n'),
+    write('\nLegend:\n=============================================\n'),
+    write('P : Your current position\n'),
+    write('H : Your house\n'),
+    write('M : Marktetplace\n'),
+    write('Q : Active quest\n'),
+    write('o : Water\n'), !.
+
+printInfoMap:-
+    playerLoc(XP, YP),
+    tile(XP, YP, quest),
+    write('\nyou arrived at the quest spot!, why not finish all the quests?\n'),
+    write('\nLegend:\n=============================================\n'),
+    write('P : Your current position\n'),
+    write('H : Your house\n'),
+    write('M : Marktetplace\n'),
+    write('R : Ranch\n'),
+    write('o : Water\n'), !.
+
+
 
 map:-
     widthMap(W),
     heightMap(H),
     W1 is W-1,
     H1 is H-1,
+    write('Here is your map!\n\n'),
     forall(between(0, H1, I),(
         forall(between(0, W1, J), (
-            tile(I, J, ID),
-            tileSymbol(ID, CharID),
-            write(CharID) 
+            printCoor(I, J)
         )),
-        nl    
-    )).
+        nl
+    )), 
+    
+    printInfoMap,
+    !.
 
     
 

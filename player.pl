@@ -17,7 +17,7 @@ reqexp(10, 204500).
 
 % Move Player
 w :-
-    playerLoc(X, Y),
+    playerLoc(X, _),
     (X =:= 1),
     write('You can\'t go beyond borders'), nl, !.
 
@@ -32,13 +32,10 @@ w:-
     X1 is X-1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X1, Y)),
-    retract(tile(X,Y,player)),
-    retract(tile(X1, Y, _)),
-    asserta(tile(X,Y,empty)),
-    asserta(tile(X1, Y, player)), !.
+    !.
 
 s :-
-    playerLoc(X, Y),
+    playerLoc(X, _),
     heightMap(H),
     (X =:= (H-2)),
     write('You can\'t go beyond borders'), nl, !.
@@ -54,13 +51,10 @@ s:-
     X1 is X+1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X1, Y)),
-    retract(tile(X,Y,player)),
-    retract(tile(X1, Y, _)),
-    asserta(tile(X,Y,empty)),
-    asserta(tile(X1, Y, player)), !.
+    !.
 
 a :-
-    playerLoc(X, Y),
+    playerLoc(_, Y),
     (Y =:= 1),
     write('You can\'t go beyond borders'), nl, !.
 
@@ -75,16 +69,13 @@ a:-
     Y1 is Y-1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X, Y1)),
-    retract(tile(X,Y,player)),
-    retract(tile(X, Y1, _)),
-    asserta(tile(X,Y,empty)),
-    asserta(tile(X, Y1, player)), !.
+    !.
 
 
 d :-
-    playerLoc(X, Y),
-    heightMap(H),
-    (Y =:= H-2),
+    playerLoc(_, Y),
+    widthMap(W),
+    (Y =:= W-2),
     write('You can\'t go beyond borders'), nl, !.
 
 d:-
@@ -95,13 +86,10 @@ d:-
 
 d:- 
     playerLoc(X, Y),
-    Y is Y+1,
+    Y1 is Y+1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X, Y1)),
-    retract(tile(X,Y,player)),
-    retract(tile(X, Y1, _)),
-    asserta(tile(X,Y,empty)),
-    asserta(tile(X, Y1, player)), !.
+    !.
 
     
     

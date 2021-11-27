@@ -1,26 +1,15 @@
 :- include('map.pl').
 
 
-isAroundWater(I,J,Bool):-
-    tile(I-1,J,Type),
-    Type == water,
-    Bool = true.
-isAroundWater(I,J,Bool):-
-    tile(I+1,J,Type),
-    Type == water,
-    Bool = true.
-isAroundWater(I,J,Bool):-
-    tile(I,J-1,Type),
-    Type == water,
-    Bool = true.
-isAroundWater(I,J,Bool):-
-    tile(I,J+1,Type),
-    Type == water,
-    Bool = true.
+isAroundWater:-
+    tile(XP, YP, player),
+    X1 is XP-1,
+    X2 is XP+1,
+    Y1 is YP-1, 
+    Y2 is YP+1,
+    (tile(X1, YP, water)|(tile(X2, YP, water))|(tile(XP, Y1, water))|tile(XP, Y2, water)), !.
 
 fish :-
-    tile(I,J,_),
-    isAroundWater(I,J,Bool),
-    Bool == true,
+    isAroundWater,
     % randoming
-    write('You got a thing!'),nl,
+    write('You got a thing!'),nl,!.

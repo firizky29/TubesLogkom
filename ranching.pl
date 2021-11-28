@@ -44,7 +44,8 @@ ranch :-
                displayAnimal(Animal)
            )
           ),
-    write('What do you want to do?'),nl,
+    write('What animal do you want to inspect?'),nl,
+    write('>>> '),
     read(Animal),
     viewAnimal(Animal),!.
 

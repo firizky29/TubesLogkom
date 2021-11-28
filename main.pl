@@ -228,3 +228,25 @@ d:-
     asserta(playerLoc(X, Y1)),
     !.
 
+
+% END GAME
+goalGame(MONEY) :-
+    MONEY >= 20000,
+    write('Congratulations! You have finally collected 20000 golds!'), nl.
+    Z is 0,
+    retract(gameState(_)),
+    asserta(gameState(Z)),
+    retract(inGameState(_)),
+    asserta(gameState(Z)),
+    !.
+
+failGame(DAY) :-
+    DAY =:= 120,
+    write('You have worked hard, but in the end result is all that matters.'),nl,
+    write('May God bless you in the future with kind people!'),nl,
+    Z is 0,
+    retract(gameState(_)),
+    asserta(gameState(Z)),
+    retract(inGameState(_)),
+    asserta(gameState(Z)),
+    !.

@@ -2,8 +2,6 @@
 :- dynamic(animal_count/2).
 :- dynamic(last_ranch_visit/1).
 
-% TODO: Integrasi daynya
-
 ranch_animal(ayam).
 ranch_animal(sapi).
 ranch_animal(domba).
@@ -25,6 +23,7 @@ ranch :-
           ),
     write('What do you want to do?'),nl,!.
 % TODO: change egg production logic to depend on chickens's age
+% Priority2 as it need to track every buys
 eggProduction(M) :-
     day(D),
     last_ranch_visit(LastVisit),
@@ -34,6 +33,7 @@ eggProduction(M) :-
     M is AyamCount * Diff * round(2 * P), !.
 
 % TODO: change wool production logic to depend on sheep's age
+% Priority2 as it need to track every buys
 woolProduction(M) :-
     day(D),
     last_ranch_visit(LastVisit),
@@ -43,13 +43,17 @@ woolProduction(M) :-
     M is DombaCount * Diff * round(2 * P), !.
 
 % TODO: Change meat production logic to counts of the cow and its ages
-meatProduction(M) :-
+milkProduction(M) :-
     day(D),
     last_ranch_visit(LastVisit),
     Diff is D - LastVisit,
     animal_count(sapi,SapiCount),
     random(0,0.2,P),
-    M is SapiCount * Diff * round(2 * P), !.
+    M is SapiCount * Diff * round(30 * P), !.
+
+increaseRanchingExp(ProductionCount, M) :-
+    M is ProductionCount * 4, 
+    gainExp(ranching, M), !.
 
 ayam :-
     playerLoc(X,Y),
@@ -70,9 +74,10 @@ ayam :-
     write(' eggs.'),nl,
     ranchingExp(PreviousExp),
     NewExp is PreviousExp + 6,
-    retract(ranchingExp(_)),
-    asserta(ranchingExp(NewExp)),
-    write('You gain 6 ranching exp'), !.
+    increaseRanchingExp(M, NewExp),
+    write('You gain '),
+    write(NewExp),
+    write(' exp.'),nl,!.
 
 
 domba :-
@@ -93,15 +98,33 @@ domba :-
     write('Now, you have '),
     write(NewWool),
     write(' kg of wool.'),nl,
-    ranchingExp(PreviousExp),
-    NewExp is PreviousExp + 6,
-    retract(ranchingExp(_)),
-    asserta(ranchingExp(NewExp)),
-    write('You gain 6 ranching exp'), !.
+    increaseRanchingExp(M, NewExp),
+    write('You gain '),
+    write(NewExp),
+    write(' exp.'),nl,!.
 
     
 
 sapi :-
     playerLoc(X,Y),
-    tile(X,Y,ranch), !.
+    tile(X,Y,ranch),
+    meatProduction(M),
+    M > 0,
+    write('Your cow produces '),
+    write(M),
+    write(' litres of milk.'),nl,
+    inventory(susu, produce, ExistingMilk),
+    NewMilk is ExistingMilk + M,
+    retract(inventory(susu, produce, _)),
+    asserta(inventory(susu, produce, NewMilk)),
+    write('You got '),
+    write(M),
+    write(' new litres of meat.'),nl,
+    write('Now, you have '),
+    write(NewMilk),
+    write(' litres of milk.'),nl,
+    increaseRanchingExp(M, NewExp),
+    write('You gain '),
+    write(NewExp),
+    write(' exp.'),nl,!.
 

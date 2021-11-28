@@ -1,10 +1,7 @@
 
 :- dynamic(plantData/5).
 % TILE SYMBOLS FOR PLANTS
-tileSymbol(kentang, 'k').
-tileSymbol(wortel, 'w').
-tileSymbol(tomat, 't').
-tileSymbol(bawang, 'b').
+
 
 
 % CONNECTION BETWEEN SEED AND PLANT
@@ -29,65 +26,106 @@ growDays(tomat, 3).
 reduceSeedCount(Item, AmountUsed) :-
     inventory(Item, seed, Count),
     Count - AmountUsed >= 0,
-    NewCount is Count - Amount,
+    NewCount is Count - AmountUsed,
     retract(inventory(Item, seed, _)),
-    assert(inventory(Item, seed, NewCount)).
+    asserta(inventory(Item, seed, NewCount)),!.
 
+% INCREASE FARMING EXP
+increaseFarmingExp(20):-
+    inventory(shovel,equipment,1),
+    gainExp(farm, 20), !.
 
+increaseFarmingExp(40) :-
+    inventory(shovel,equipment,2),
+    gainExp(farm, 40), !.
+
+increaseFarmingExp(60) :-
+    inventory(shovel,equipment,3),
+    gainExp(farm, 60), !.
 
 dig :-
     playerLoc(X,Y),
     tile(X,Y,Tile),
-    Tile =:= empty,
+    Tile == empty,
     retract(tile(X,Y,_)),
-    asserta(tile(X,Y,digged)).
+    asserta(tile(X,Y,digged)),
+    write('You dug a hole!'), nl,!.
+
+plant :-
+    playerLoc(X,Y),
+    tile(X,Y,Tile),
+    Tile =/= digged,
+    write("You can't plant on an undig soil!"),
+    nl, !.
+
+plant :-
+    forall(inventory(_, seed, Count), Count=:=0),
+    write('You have no seed.'), nl, !.
 
 plant:-
     playerLoc(X,Y),
     tile(X,Y,Tile),
-    Tile =:= digged,
+    Tile == digged,
     write('You have: '),
     nl,
     forall(inventory(Seed, seed, Count),
         (
-            write('- '),
-            write(Count),
-            plantOfSeed(Seed, Plant),
-            write(' '),
-            write(Plant),
-            write(' seed'),
-            nl
-        )
-    ),
+            writeinvent(Seed, seed, Count)
+        )),
     write('Which seed do you want to plant? '),
-    read(Seed),
+    read(Plant),
+    plantOfSeed(Seed, Plant),
     reduceSeedCount(Seed, 1),
     write('You planted a '),
-    write(Seed),
+    write(Plant),
     write(' seed.'),
     nl,
     plantOfSeed(Seed, Plant),
     retract(tile(X,Y,_)),
     asserta(tile(X,Y,Plant)),
-    retract(plantData(X,Y,_,_,_)),
     day(DayPlanted),
     growDays(Plant, GrowDays),
-    asserta(plantData(X,Y,Plant,DayPlanted,DayPlanted + GrowDays)).
+    asserta(plantData(X,Y,Plant,DayPlanted,DayPlanted + GrowDays)),!.
+
+
+
 
 harvest:-
     playerLoc(X,Y),
-    tile(X,Y,Tile),
-    inventory(Tile, gardening, PrevCount),
+    tile(X,Y,Plant),
+    inventory(Plant, gardening, PrevCount),
+    plantData(X,Y,_,_,DayAbleToHarvest),
+    day(Day),
+    DayAbleToHarvest >= Day, 
+    NewCount is PrevCount + 1,
+    retract(inventory(Plant, gardening, _)),
+    asserta(inventory(Plant, gardening, NewCount)),
+    write('You harvested '),
+    write(Plant),
+    write(' .'),
+    nl,
+    increaseFarmingExp(Exp),
+    write('You gained '),
+    write(Exp),
+    write(' farming exp.'),
+    nl,
+    retract(tile(X,Y,_)),
+    asserta(tile(X,Y,empty)), !.
+
+harvest:-
+    playerLoc(X,Y),
+    tile(X,Y,Plant),
     plantData(X,Y,Plant,_,DayAbleToHarvest),
     day(Day),
-    DayAbleToHarvest =:= Day,
-    NewCount is PrevCount + 1,
-    retract(inventory(Tile, gardening, _)),
-    asserta(inventory(Tile, gardening, NewCount)),
-    write('You harvested '),
-    write(Tile),
+    DayAbleToHarvest =\= Day, 
+    write('You cannot harvest '),
+    write(Plant),
     write(' .'),
-    retract(tile(X,Y,_)),
-    asserta(tile(X,Y,empty)).
+    nl,
+    write('You have to wait until day '),
+    write(DayAbleToHarvest),
+    write(' to harvest '),
+    write(Plant),
+    !.
 
 

@@ -21,7 +21,7 @@ inventory(tomat, gardening, 1).
 inventory(fishing_rod,equipment,0).
 inventory(shovel,equipment,3).
 inventory(watering,equipment,0).
-inventory(bibit_wortel, seed, 0).
+inventory(bibit_wortel, seed, 1).
 inventory(bibit_lobak, seed, 0).
 inventory(bibit_kentang, seed, 0).
 inventory(bibit_bawang, seed, 0).
@@ -65,6 +65,12 @@ writeinvent(NAME, equipment, LV) :-
     inventory(NAME, equipment, LV),
     LV > 0,
     write('-  Level '), write(LV), write(' '), write(NAME), nl, !. 
+
+writeinvent(NAME, seed, COUNT) :-
+    inventory(NAME, seed, COUNT),
+    COUNT > 0,
+    plantOfSeed(NAME, PLANT),
+    write('-  '), write(COUNT), write(' '), write(PLANT), write(' seed'), nl, !. 
 
 writeinvent(NAME, _, COUNT) :-
     COUNT > 0,

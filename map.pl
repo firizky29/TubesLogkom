@@ -12,6 +12,10 @@ tileSymbol(house, 'H').
 tileSymbol(quest, 'Q').
 tileSymbol(water, 'o').
 tileSymbol(digged, '=').
+tileSymbol(kentang, 'k').
+tileSymbol(wortel, 'w').
+tileSymbol(tomat, 't').
+tileSymbol(bawang, 'b').
 
 widthMap(0).
 heightMap(0).

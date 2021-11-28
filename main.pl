@@ -3,10 +3,10 @@
 :- include('item.pl').
 :- include('player.pl').
 :- include('quest.pl').
-% :- include('farming.pl').
+:- include('farming.pl').
 :- include('market.pl').
 :- include('fishing.pl').
-% :- include('ranching.pl').
+:- include('ranching.pl').
 :- include('house.pl').
 
 

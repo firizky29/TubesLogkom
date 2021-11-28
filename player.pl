@@ -130,9 +130,5 @@ gainExp(Type, Inc):-
     asserta(playerExp(Type, New_Exp)),
     !.
 
-% TODO: Mekanisme Quest
-% TODO: Mekanisme Exp dan level
-% TODO: Implikasi role dan level
-
 
 

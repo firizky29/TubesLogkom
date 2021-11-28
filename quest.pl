@@ -162,8 +162,14 @@ reward:-
     random(100, 200, MultFarm),
     IncFarmExp is FarmDifficulty*20 + FarmLevel*MultFarm,
     IncExp is TotalDiff*100,
-    write('\nCongratulations, you earn '), write(IncExp), write(' Exp\n'),
-    write('You also gain '), write(IncFishExp), write(' Exp of fishing experiences, '),
-    write(IncRanchExp), write(' Exp of ranching experiences, and '), 
+    write('\nCongratulations, you earn '), write(IncExp), write(' Exp\n\n'),
+    write('You also gain '), write(IncFishExp), write(' Exp of fishing experiences,\n '),
+    write(IncRanchExp), write(' Exp of ranching experiences,\nand '), 
     write(IncFarmExp), write(' Exp of farming experiences, \n'),
-    write('\nThat\'s a lot of experiences! it makes you even more excited to work, doesn\'t it?\n'), !.
+    write('\nThat\'s a lot of experiences! it makes you even more excited to work, doesn\'t it?\n'), 
+    gainExp(fish, IncFishExp),
+    gainExp(ranch, IncRanchExp),
+    gainExp(farm, IncFarmExp),
+    gainExp(total, IncExp),
+    generateNewQuestPlace,
+    !.

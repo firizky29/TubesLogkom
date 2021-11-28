@@ -51,21 +51,17 @@ dig :-
     asserta(tile(X,Y,digged)),
     write('You dug a hole!'), nl,!.
 
-plant :-
-    playerLoc(X,Y),
-    tile(X,Y,Tile),
-    Tile =/= digged,
-    write("You can't plant on an undig soil!"),
-    nl, !.
+
 
 plant :-
+    playerLoc(X,Y),
+    tile(X,Y,digged),
     forall(inventory(_, seed, Count), Count=:=0),
     write('You have no seed.'), nl, !.
 
 plant:-
     playerLoc(X,Y),
-    tile(X,Y,Tile),
-    Tile == digged,
+    tile(X,Y,digged),
     write('You have: '),
     nl,
     forall(inventory(Seed, seed, Count),
@@ -88,6 +84,9 @@ plant:-
     asserta(plantData(X,Y,Plant,DayPlanted,DayPlanted + GrowDays)),!.
 
 
+plant :-
+    write("You can't plant on an undig soil!"),
+    nl, !.
 
 
 harvest:-

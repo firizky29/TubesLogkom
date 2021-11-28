@@ -59,6 +59,8 @@ start :-
     write('3. Rancher\n\n'),
     write('Select from 1 to 3: '),
     read(Idx),
+    Idx > 0,
+    Idx < 4,
     initPlayer(Idx), 
     printRole(Idx),
     initMap,

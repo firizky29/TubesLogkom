@@ -1,3 +1,13 @@
+:- dynamic(fishListGenerator/1).
+
+fishListGenerator([]).
+
+rarity(arwana, 10). % semakin besar semakin tidak langka
+rarity(gurame, 15).
+rarity(lele, 30).
+rarity(nila, 25).
+rarity(mujair, 20).
+
 isAroundWater:-
     playerLoc(XP, YP),
     X1 is XP-1,
@@ -22,31 +32,57 @@ isAroundWater:-
     tile(XP, Y2, water), 
     !.
 
-getFish(R, empty):-
-    R =< 20, !.
-getFish(R, arwana):-
-    R > 20,
-    R =< 30, !.
-getFish(R, gurame):-
-    R > 30,
-    R =< 45, !.
-getFish(R, lele):-
-    R > 45,
-    R =< 75, !.
-getFish(R, nila):-
-    R > 75,
-    R =< 100, !.
-getFish(R, mujair):-
-    R > 100, !.
+countEmpty(X):-
+    playerRole(fisherman),
+    fishListGenerator(L),
+    length(L, Len),
+    X is 50*Len div 100, !.
+
+countEmpty(X):-
+    fishListGenerator(L),
+    length(L, Len),
+    X is 80*Len div 100, !.
+
+fishGenerator:-
+    forall((inventory(Fish, fish, _), rarity(Fish, Rarity), between(1, Rarity, _)), (
+        fishListGenerator(L),
+        append(L, [Fish], L_New),
+        asserta(fishListGenerator(L_New)),
+        retract(fishListGenerator(L))
+    )), 
+    countEmpty(X),
+    forall(between(1, X, _), (
+        fishListGenerator(L),
+        append(L, [empty], L_New),
+        asserta(fishListGenerator(L_New)),
+        retract(fishListGenerator(L))
+    )),
+    !.
 
 fish :-
     isAroundWater,
-    random(0,120,R),
-    getFish(R, FishFished),
-    % write(FishFished),
-    % retract(inventory(FishFished, fish, Previous)),
-    % New is Previous + 1,
-    % asserta(inventory(FishFished, fish, New)),
-    write('You got a '),
+    fishListGenerator(L),
+    length(L, Len),
+    random(0,Len,Idx),
+    nth0(Idx, L, FishFished),
+    gotFishInterface(FishFished), !.
+
+gotFishInterface(empty):-
+    write('oh no, unfortunately you didn\'t get anything, try again will you?'), !.
+
+gotFishInterface(FishFished):-
+    addProgress(FishFished, 1),
+    retract(inventory(FishFished, fish, Previous)),
+    New is Previous + 1,
+    asserta(inventory(FishFished, fish, New)),
+    write('Amazing! you got a(n) '),
     write(FishFished),
-    write('!'),nl,!.
+    write('!'), nl, !.
+
+gotFishInterface(FishFished):-
+    retract(inventory(FishFished, fish, Previous)),
+    New is Previous + 1,
+    asserta(inventory(FishFished, fish, New)),
+    write('Amazing! you got a(n) '),
+    write(FishFished),
+    write('!'), nl, !.

@@ -62,6 +62,7 @@ start :-
     initPlayer(Idx), 
     printRole(Idx),
     initMap,
+    fishGenerator,
     inGameOn,
     !.
 

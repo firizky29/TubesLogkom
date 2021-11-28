@@ -130,4 +130,10 @@ quest:-
 quest:-
     write('\nYou have (an) active quest(s), to find out what quest(s) to be completed, please come to the \'Q\' tile'), !.
 
-
+addProgress(Item, Inc):-
+    questTargetItem(Type, Item),
+    questProgress(Type, X),
+    questTarget(Type, Y),
+    X_new is min(X+Inc, Y),
+    retract(questProgress(Type, _)),
+    asserta(questProgress(Type, X_new)), !.

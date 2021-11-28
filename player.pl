@@ -1,175 +1,138 @@
 
 :- dynamic(playerRole/1).
-:- dynamic(playerLevel/1).
-:- dynamic(fishingExp/1).
-:- dynamic(ranchingExp/1).
-:- dynamic(farmingExp/1).
-:- dynamic(fishingLevel/1).
-:- dynamic(ranchingLevel/1).
-:- dynamic(farmingLevel/1).
+:- dynamic(playerExp/2).
 :- dynamic(money/1).
-:- dynamic(playerExp/1).
+:- dynamic(growthExp/2).
 :- include('map.pl').
 
-playerLevel(0).
-fishingExp(0).
-farmingExp(0).
-ranchingExp(0).
-fishingLevel(0).
-ranchingLevel(0).
-farmingLevel(0).
+playerRole(0).
+playerExp(0, 0).
 money(0).
-playerExp(0).
 
 % fakta-fakta dari player
-idRole(1, fisherman).
-idRole(2, farmer).
-idRole(3, rancher).
-roleDisplay(fisherman, 'Fisherman').
-roleDisplay(farmer, 'Farmer').
-roleDisplay(rancher, 'Rancher').
+idRole(1, fish).
+idRole(2, farm).
+idRole(3, ranch).
+roleDisplay(fish, 'Fisherman').
+roleDisplay(farm, 'Farmer').
+roleDisplay(ranch, 'Rancher').
 % reqexp(level, N) : reqierementXP
 
-reqexp(0, 0).
-reqexp(1, 300).
-reqexp(2, 700).
-reqexp(3, 1500).
-reqexp(4, 3100).
-reqexp(5, 6300).
-reqexp(6, 12700).
-reqexp(7, 25500).
-reqexp(8, 51100).
-reqexp(9, 102300).
-reqexp(10, 204500).
+reqexp(_, 0, 0).
+reqexp(_, 1, 300).
+reqexp(_, 2, 700).
+reqexp(_, 3, 1500).
+reqexp(_, 4, 3100).
+reqexp(_, 5, 6300).
+reqexp(_, 6, 12700).
+reqexp(_, 7, 25500).
+reqexp(_, 8, 51100).
+reqexp(_, 9, 102300).
+reqexp(_, 10, 'INF').
 
-playerRole(0).
-
-% Move Player
-w :- 
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-w :-
-    playerLoc(X, _),
-    (X =:= 1),
-    write('You can\'t go beyond borders'), nl, !.
-
-w:-
-    playerLoc(X, Y),
-    X1 is X-1,
-    tile(X1, Y, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-w:- 
-    playerLoc(X, Y),
-    X1 is X-1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X1, Y)),
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 1, Req),
+    Exp =< Req, 
+    Level is 1,
     !.
 
-s :- 
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-s :-
-    playerLoc(X, _),
-    heightMap(H),
-    (X =:= (H-2)),
-    write('You can\'t go beyond borders'), nl, !.
-
-s:-
-    playerLoc(X, Y),
-    X1 is X+1,
-    tile(X1, Y, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-s:- 
-    playerLoc(X, Y),
-    X1 is X+1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X1, Y)),
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 2, Req),
+    Exp =< Req, 
+    Level is 2,
     !.
 
-a :- 
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-a :-
-    playerLoc(_, Y),
-    (Y =:= 1),
-    write('You can\'t go beyond borders'), nl, !.
-
-a:-
-    playerLoc(X, Y),
-    Y1 is Y-1,
-    tile(X, Y1, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-a:- 
-    playerLoc(X, Y),
-    Y1 is Y-1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y1)),
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 3, Req),
+    Exp =< Req, 
+    Level is 3,
     !.
 
-d :-
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-d :-
-    playerLoc(_, Y),
-    widthMap(W),
-    (Y =:= W-2),
-    write('You can\'t go beyond borders'), nl, !.
-
-d:-
-    playerLoc(X, Y),
-    Y1 is Y+1,
-    tile(X, Y1, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-d:- 
-    playerLoc(X, Y),
-    Y1 is Y+1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y1)),
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 4, Req),
+    Exp =< Req, 
+    Level is 4,
     !.
 
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 5, Req),
+    Exp =< Req, 
+    Level is 5,
+    !.
+
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 6, Req),
+    Exp =< Req, 
+    Level is 6,
+    !.
+
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 7, Req),
+    Exp =< Req, 
+    Level is 7,
+    !.
+
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 8, Req),
+    Exp =< Req, 
+    Level is 8,
+    !.
+
+playerLevel(Type, Level):-
+    playerExp(Type, Exp),
+    reqexp(Type, 9, Req),
+    Exp =< Req, 
+    Level is 9,
+    !.
+
+playerLevel(Type, Level):-
+    playerExp(Type, _),
+    Level is 10,
+    !.
     
 initPlayer(Idx):-
     retract(playerRole(_)),
     idRole(Idx, Role),
-    asserta(playerRole(Role)), 
-    retract(playerLevel(_)),
-    asserta(playerLevel(1)),
-    retract(fishingExp(_)),
-    asserta(fishingExp(0)),
-    retract(farmingExp(_)),
-    asserta(farmingExp(0)),
-    retract(ranchingExp(_)),
-    asserta(ranchingExp(0)),
-    retract(fishingLevel(_)),
-    asserta(fishingLevel(0)),
-    retract(farmingLevel(_)),
-    asserta(farmingLevel(0)),
-    retract(ranchingLevel(_)),
-    asserta(ranchingLevel(0)),
+    asserta(playerRole(Role)),
     retract(money(_)),
     asserta(money(1000)),
-    retract(playerExp(_)),
-    asserta(playerExp(0)),
+    retract(playerExp(_, _)),
+    asserta(playerExp(total, 0)),
+    asserta(playerExp(fish, 0)),
+    asserta(playerExp(ranch, 0)),
+    asserta(playerExp(farm, 0)),
     !.
 
 printRole(Idx):-
-    idRole(Idx, fisherman),
+    idRole(Idx, fish),
     write('\nYou\' choose fisherman, let\'s start farming!\n'), !.
 
 printRole(Idx):-
-    idRole(Idx, farmer),
+    idRole(Idx, farm),
     write('\nYou\' choose farmer, let\'s start farming!'), !.
 
 printRole(Idx):-
-    idRole(Idx, rancher),
+    idRole(Idx, ranch),
     write('\nYou\' choose rancher, let\'s start farming!'), !.
+
+gainExp(Type, Inc):- 
+    playerExp(Type, Exp),
+    New_Exp is Exp + Inc,
+    retract(playerExp(Type, Exp)),
+    asserta(playerExp(Type, New_Exp)),
+    !.
+
+% TODO: Mekanisme Quest
+% TODO: Mekanisme Exp dan level
+% TODO: Implikasi role dan level
+
 
 

@@ -12,8 +12,8 @@ itemType(lobak,farm).
 itemType(kentang,farm).
 itemType(bawang,farm).
 itemType(tomat,farm).
-itemType(equipment).
-itemType(seed).
+% itemType(equipment).
+% itemType(seed).
 % itemType(produce).
 itemType(telur,ranch).
 itemType(sutra,ranch).

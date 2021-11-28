@@ -1,6 +1,4 @@
-:- include('map.pl').
-:- include('item.pl').
-:- include('player.pl').
+
 :- dynamic(animal_count/2).
 :- dynamic(last_ranch_visit/1).
 

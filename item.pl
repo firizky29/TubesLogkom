@@ -20,7 +20,7 @@ inventory(kentang, gardening, 1).
 inventory(bawang, gardening, 1).
 inventory(tomat, gardening, 1).
 inventory(fishing_rod,equipment,0).
-inventory(shovel,equipment,0).
+inventory(shovel,equipment,3).
 inventory(watering,equipment,0).
 inventory(bibit_wortel, seed, 0).
 inventory(bibit_lobak, seed, 0).

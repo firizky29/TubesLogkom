@@ -1,6 +1,4 @@
-:- include('map.pl').
-:- include('item.pl').
-:- include('player.pl').
+
 :- dynamic(plantData/5).
 % TILE SYMBOLS FOR PLANTS
 tileSymbol(kentang, 'k').

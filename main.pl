@@ -1,6 +1,16 @@
+:- include('map.pl').
+:- include('item.pl').
+% :- include('farming.pl').
+:- include('fishing.pl').
+% :- include('ranching.pl').
+:- include('house.pl').
+:- include('market.pl').
+:- include('player.pl').
+
+
 :- dynamic(gameState / 1). /* gameState(isGameOn/Off) */
 :- dynamic(inGameState/1).
-:- include('player.pl').
+
 
 gameState(0).
 inGameState(0).
@@ -13,15 +23,14 @@ inGameOn:-
     retract(inGameState(_)),
     asserta(inGameState(1)), !.
 
-
 /* Rule */
 startGame :-
     gameState(0),
-    write(' _   _                           _      _    _                    '), nl,
-    write('| | | | __ _ _ ____   _____  ___| |_   | \\  / | ___   ___  _  __  '), nl,
-    write('| |_| |/ _` | \'__\\ \\ / / _ \\/ __| __|  |  \\/  |/ _ \\ / _ \\| |/  | '), nl,
-    write('|  _  | (_| | |   \\ V /  __/\\__ \\ |_   | |\\/| | (_) | (_) |  /| | '), nl,
-    write('|_| |_|\\__,_|_|    \\_/ \\___||___/\\__|  |_|  |_|\\___/ \\___/|_| |_| '), nl,
+    write(' _   _                           _          _'), nl,
+    write('| | | | __ _ _ ____   _____  ___| |_    ___| |_  __ _ _ __'), nl,
+    write('| |_| |/ _` | \'__\\ \\ / / _ \\/ __| __|  / __| __|/ _` | \'__|'), nl,
+    write('|  _  | (_| | |   \\ V /  __/\\__ \\ |_   \\__ \\ |_| (_| | |'), nl,
+    write('|_| |_|\\__,_|_|    \\_/ \\___||___/\\__|  |___/\\__|\\__,_|_|'), nl,
     nl,
     write('I Got Scammed By My Client And Have to Restart My Life As A Farmer'), nl,
     nl,

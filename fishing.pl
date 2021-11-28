@@ -1,4 +1,3 @@
-:- include('map.pl').
 
 inventory(arwana, fish, 1).
 inventory(gurame, fish, 1).

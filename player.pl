@@ -9,7 +9,6 @@
 :- dynamic(farmingLevel/1).
 :- dynamic(money/1).
 :- dynamic(playerExp/1).
-:- include('map.pl').
 
 playerLevel(0).
 fishingExp(0).

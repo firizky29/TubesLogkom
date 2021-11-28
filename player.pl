@@ -113,15 +113,15 @@ initPlayer(Idx):-
 
 printRole(Idx):-
     idRole(Idx, fish),
-    write('\nYou\' choose fisherman, let\'s start farming!\n'), !.
+    write('\nYou choose fisherman, let\'s start farming!\n'), !.
 
 printRole(Idx):-
     idRole(Idx, farm),
-    write('\nYou\' choose farmer, let\'s start farming!'), !.
+    write('\nYou choose farmer, let\'s start farming!'), !.
 
 printRole(Idx):-
     idRole(Idx, ranch),
-    write('\nYou\' choose rancher, let\'s start farming!'), !.
+    write('\nYou choose rancher, let\'s start farming!'), !.
 
 gainExp(Type, Inc):- 
     playerExp(Type, Exp),

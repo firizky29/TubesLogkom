@@ -1,4 +1,4 @@
-
+:- dynamic(animal_buy/3).
 cheat :- 
     % initMap,
     retract(playerLoc(_, _)),
@@ -55,7 +55,8 @@ buy :-
     write('>> '),
     read(C), 
     nl,
-    (C =:= 1, buy_choice(bibit_wortel);
+    (
+    C =:= 1, buy_choice(bibit_wortel);
     C =:= 2, buy_choice(bibit_lobak);
     C =:= 3, buy_choice(bibit_kentang);
     C =:= 4, buy_choice(bibit_bawang);

@@ -4,6 +4,10 @@
 :- dynamic(last_ranch_visit_cow/1).
 :- dynamic(last_ranch_visit_sheep/1).
 
+animal_buy(ayam,0,0).
+animal_buy(sapi,0,0).
+animal_buy(domba,0,0).
+
 
 ranch_animal(ayam).
 ranch_animal(sapi).
@@ -13,9 +17,12 @@ animal_count(ayam,0).
 animal_count(sapi,0).
 animal_count(domba,0).
 
-last_ranch_visit_chicken(0).
-last_ranch_visit_cow(0).
-last_ranch_visit_sheep(0).
+displayAnimal(X):-
+    animal_count(X,Y),
+    Y > 0,
+    write(Y),write(' '),write(X),nl.
+displayAnimal(_):-
+    !.
 
 ranchCheat :-
     retract(playerLoc(_, _)),
@@ -25,51 +32,49 @@ ranchCheat :-
 ranch :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
+    forall(animal_count(_, Count), Count=:=0),
+    write('You have no animal, you can buy it in the market!'), nl, !.
+
+ranch :-
+    playerLoc(X,Y),
+    tile(X,Y,ranch),
     write('Welcome to the ranch! You have:'),nl,
     forall(ranch_animal(Animal),
            (
-               animal_count(Animal, Count),write(Count),write(' '),write(Animal),nl
+               displayAnimal(Animal)
            )
           ),
-    write('What do you want to do?'),nl,!.
+    write('What animal do you want to inspect?'),nl,
+    write('>>> '),
+    read(Animal),
+    viewAnimal(Animal),!.
+
 % TODO: change egg production logic to depend on chickens's age
 % Priority2 as it need to track every buys
-eggProduction(M) :-
-    day(D),
-    last_ranch_visit(LastVisit),
-    Diff is D - LastVisit,
-    animal_count(ayam,AyamCount),
-    random(0,0.2,P),
-    M is AyamCount * Diff * round(5 * P), !.
 
-% TODO: change wool production logic to depend on sheep's age
-% Priority2 as it need to track every buys
-woolProduction(M) :-
-    day(D),
-    last_ranch_visit(LastVisit),
-    Diff is D - LastVisit,
-    animal_count(domba,DombaCount),
-    random(0,0.2,P),
-    M is DombaCount * Diff * round(2 * P), !.
+daily_production_limit(ayam, 3).
+daily_production_limit(sapi, 3).
+daily_production_limit(domba, 1).
 
-% TODO: Change meat production logic to counts of the cow and its ages
-milkProduction(M) :-
+production(Animal,M) :-
     day(D),
-    last_ranch_visit(LastVisit),
-    Diff is D - LastVisit,
-    animal_count(sapi,SapiCount),
-    random(0,0.6,P),
-    M is SapiCount * Diff * round(10 * P), !.
+    M is 0,
+    forall(animal_buy(Animal, Count, DayBuy), (
+        random(P),
+        Diff is D - DayBuy,
+        daily_production_limit(Animal, Limit),
+        M is M + Count * Diff * round(Limit * P)
+    )), !.
 
 increaseRanchingExp(ProductionCount, M) :-
     M is ProductionCount * 4, 
     gainExp(ranch, M), !.
 
     
-ayam :-
+viewAnimal(ayam) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
-    eggProduction(M),
+    production(ayam,M),
     M > 0,
     write('Your chicken lays '),
     write(M),
@@ -84,18 +89,15 @@ ayam :-
     increaseRanchingExp(M, NewExp),
     write('You gain '),
     write(NewExp),
-    write(' exp.'),nl,
-    day(D),
-    retract(last_ranch_visit_chicken(_)),
-    ,!.
+    write(' exp.'),nl,!.
 
-ayam :-
+viewAnimal(ayam) :-
     write('Your chicken lays no eggs today <(＿　＿)>'),nl,!.
 
-domba :-
+viewAnimal(domba) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
-    woolProduction(M),
+    production(domba,M),
     M > 0,
     write('Your sheep produces '),
     write(M),
@@ -112,12 +114,13 @@ domba :-
     write(NewExp),
     write(' exp.'),nl,!.
 
-    
+viewAnimal(domba) :-
+    write('Your sheep create no wools today <(＿　＿)>'),nl,!.
 
-sapi :-
+viewAnimal(sapi) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
-    milkProduction(M),
+    production(sapi,M),
     M > 0,
     write('Your cow produces '),
     write(M),
@@ -134,3 +137,8 @@ sapi :-
     write(NewExp),
     write(' exp.'),nl,!.
 
+viewAnimal(sapi) :-
+    write('Your cow not produce milks today <(＿　＿)>'),nl,!.
+
+viewAnimal(_) :-
+    write('No animal like that here!'),nl,!.

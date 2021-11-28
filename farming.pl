@@ -75,9 +75,18 @@ plant:-
     )),
     write('Which seed do you want to plant? '),
     read(Plant),
+    plantAttempt(Plant), !.
+
+
+plant :-
+    write('You can\'t plant on an undigged soil!'),
+    nl, !.
+
+plantAttempt(Plant):-
+    inventory(Plant, seed, Cnt), Cnt > 0,
     plantOfSeed(Seed, Plant),
     reduceSeedCount(Seed, 1),
-    write('\nYou planted a '),
+    write('\nYou managed to plant a(n) '),
     write(Plant),
     write(' seed.'),
     nl,
@@ -86,12 +95,13 @@ plant:-
     asserta(tile(X,Y,Plant)),
     day(DayPlanted),
     growDays(Plant, GrowDays),
-    asserta(plantData(X,Y,Plant,DayPlanted,DayPlanted + GrowDays)),!.
+    DayAbleToHarvest is DayPlanted + GrowDays,
+    asserta(plantData(X, Y, Plant, DayPlanted, DayAbleToHarvest)),!.
 
+plantAttempt(Plant):-
+    write('\nFailed to plant a(n) '), write(Plant),
+    write(' seed. Try Again.'), nl, !.
 
-plant :-
-    write('You can\'t plant on an undigged soil!'),
-    nl, !.
 
 
 harvest:-
@@ -104,13 +114,14 @@ harvest:-
     NewCount is PrevCount + 1,
     retract(inventory(Plant, gardening, _)),
     asserta(inventory(Plant, gardening, NewCount)),
-    write('You harvested '),
+    write('You managed to harvest a(n) '),
     write(Plant),
-    write(' .'),
-    harvestGain(Plant),
+    write(' crop.'),
     nl,
+    harvestGain(Plant),
     retract(tile(X,Y,_)),
-    asserta(tile(X,Y,empty)), !.
+    asserta(tile(X,Y,empty)),
+    retract(plantData(X, Y, Plant, _, _)), !.
 
 harvest:-
     playerLoc(X,Y),

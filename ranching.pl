@@ -51,8 +51,6 @@ ranch :-
     read(Animal),
     viewAnimal(Animal),!.
 
-% TODO: change egg production logic to depend on chickens's age
-% Priority2 as it need to track every buys
 
 daily_production_limit(ayam, 3).
 daily_production_limit(sapi, 3).
@@ -75,7 +73,10 @@ production_return(Animal):-
     findall(Count, animal_buy(Animal, Count, _), L),
     sum_list(L, Counts),
     retractall(animal_buy(Animal, _, _)),
-    asserta(animal_buy(Animal, Counts, D)), !.
+    asserta(animal_buy(Animal, Counts, D)), 
+    retract(animal_production(Animal, _)),
+    asserta(animal_production(Animal, 0)),
+    !.
 
 increaseRanchingExp(ProductionCount, Exp, Item) :-
     itemExp(Item, Gain),
@@ -97,7 +98,9 @@ viewAnimal(ayam) :-
     write('Now, you have '),
     write(NewEggs),
     write(' eggs.'),nl,
-    animalGain(telur, M), !.
+    animalGain(telur, M),
+    production_return(ayam),
+    !.
 
 viewAnimal(ayam) :-
     write('Your chicken lays no eggs today <(＿　＿)>'),nl,!.
@@ -118,7 +121,9 @@ viewAnimal(domba) :-
     write('Now, you have '),
     write(NewWool),
     write(' kg of wool.'),nl,
-    animalGain(sutra, M), !.
+    animalGain(sutra, M), 
+    production_return(domba),
+    !.
 
 viewAnimal(domba) :-
     write('Your sheep create no wools today <(＿　＿)>'),nl,!.
@@ -139,7 +144,9 @@ viewAnimal(sapi) :-
     write('Now, you have '),
     write(NewMilk),
     write(' litres of milk.'),nl,
-    animalGain(susu, M), !.
+    animalGain(susu, M), 
+    production_return(sapi),
+    !.
 
 viewAnimal(sapi) :-
     write('Your cow is\'nt producing any milk today <(＿　＿)>'),nl,!.

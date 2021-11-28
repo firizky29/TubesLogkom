@@ -31,7 +31,7 @@ inventory(lobak, gardening, 1).
 inventory(kentang, gardening, 1).
 inventory(bawang, gardening, 1).
 inventory(tomat, gardening, 1).
-inventory(fishing_rod,equipment,0).
+inventory(fishing_rod,equipment,1).
 inventory(shovel,equipment,3).
 inventory(watering,equipment,0).
 inventory(bibit_wortel, seed, 1).

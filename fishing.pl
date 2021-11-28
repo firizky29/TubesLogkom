@@ -67,6 +67,9 @@ fish :-
     nth0(Idx, L, FishFished),
     gotFishInterface(FishFished), !.
 
+fish :-
+    write('\nAre you going to catch a worm or something? you can only FISH near the pond\n'), !.
+
 gotFishInterface(empty):-
     write('oh no, unfortunately you didn\'t get anything, try again will you?'), !.
 

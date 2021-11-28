@@ -31,53 +31,53 @@ reduceSeedCount(Item, AmountUsed) :-
     asserta(inventory(Item, seed, NewCount)),!.
 
 % INCREASE FARMING EXP
-increaseFarmingExp(20):-
-    inventory(shovel,equipment,1),
-    gainExp(farm, 20), !.
+increaseFarmingExp(Exp):-
+    inventory(shovel, _, ShovelLevel),
+    playerRole(farm),
+    random(30, 41, Mult),
+    Exp is (Mult*ShovelLevel), !.
 
-increaseFarmingExp(40) :-
-    inventory(shovel,equipment,2),
-    gainExp(farm, 40), !.
+increaseFarmingExp(Exp):-
+    inventory(shovel, _, ShovelLevel),
+    random(20, 31, Mult),
+    Exp is (Mult*ShovelLevel), !.
 
-increaseFarmingExp(60) :-
-    inventory(shovel,equipment,3),
-    gainExp(farm, 60), !.
 
-dig :-
+dig:-
     playerLoc(X,Y),
-    tile(X,Y,Tile),
-    Tile == empty,
+    tile(X,Y,empty),
     retract(tile(X,Y,_)),
     asserta(tile(X,Y,digged)),
     write('You dug a hole!'), nl,!.
 
-plant :-
+dig:-
     playerLoc(X,Y),
-    tile(X,Y,Tile),
-    Tile \= digged,
-    write("You can't plant on an undig soil!"),
-    nl, !.
+    tile(X,Y,digged),
+    write('\nYou\'re already digged it, you just wasted your energy\n'), !.
+
+dig:-
+    write('\nAre you really going to dig the entire building? of course not :D\n'), !.
+
 
 plant :-
     playerLoc(X,Y),
     tile(X,Y,digged),
     forall(inventory(_, seed, Count), Count=:=0),
-    write('You have no seed.'), nl, !.
+    write('You have no seed. You can buy seeds at the marketplace'), nl, !.
 
 plant:-
     playerLoc(X,Y),
     tile(X,Y,digged),
     write('You have: '),
     nl,
-    forall(inventory(Seed, seed, Count),
-        (
-            writeinvent(Seed, seed, Count)
-        )),
+    forall(inventory(Seed, seed, Count), (
+        writeinvent(Seed, seed, Count)
+    )),
     write('Which seed do you want to plant? '),
     read(Plant),
     plantOfSeed(Seed, Plant),
     reduceSeedCount(Seed, 1),
-    write('You planted a '),
+    write('\nYou planted a '),
     write(Plant),
     write(' seed.'),
     nl,
@@ -90,7 +90,7 @@ plant:-
 
 
 plant :-
-    write("You can't plant on an undig soil!"),
+    write('You can\'t plant on an undigged soil!'),
     nl, !.
 
 
@@ -107,11 +107,7 @@ harvest:-
     write('You harvested '),
     write(Plant),
     write(' .'),
-    nl,
-    increaseFarmingExp(Exp),
-    write('You gained '),
-    write(Exp),
-    write(' farming exp.'),
+    harvestGain(Plant),
     nl,
     retract(tile(X,Y,_)),
     asserta(tile(X,Y,empty)), !.
@@ -130,6 +126,37 @@ harvest:-
     write(DayAbleToHarvest),
     write(' to harvest '),
     write(Plant),
+    !.
+
+harvestGain(Item):-
+    addProgress(Item, 1),
+    increaseFarmingExp(Exp),
+    gainExp(farm, Exp),
+    TotalExp is (Exp*120) div 100,
+    gainExp(total, TotalExp),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp.\n'),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp and '),
+    write(Exp),
+    write(' Exp. \n How cool is that?\n'),
+    !.
+
+harvestGain(Item):-
+    increaseFarmingExp(Exp),
+    gainExp(farm, Exp),
+    TotalExp is (Exp*120) div 100,
+    gainExp(total, TotalExp),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp.\n'),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp and '),
+    write(Exp),
+    write(' Exp. \n How cool is that?\n'),
     !.
 
 

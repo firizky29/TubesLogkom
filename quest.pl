@@ -148,6 +148,8 @@ addProgress(Item, Inc):-
 
 reward:-
     allQuestCompleted,
+    playerLoc(XP, YP),
+    tile(XP, YP, quest),
     generateDifficulty(fish, FishDifficulty),
     generateDifficulty(ranch, RanchDifficulty),
     generateDifficulty(farm, FarmDifficulty),
@@ -162,8 +164,8 @@ reward:-
     random(100, 200, MultFarm),
     IncFarmExp is FarmDifficulty*20 + FarmLevel*MultFarm,
     IncExp is TotalDiff*100,
-    write('\nCongratulations, you earn '), write(IncExp), write(' Exp\n\n'),
-    write('You also gain '), write(IncFishExp), write(' Exp of fishing experiences,\n '),
+    write('\nCongratulations, you earned '), write(IncExp), write(' Exp\n\n'),
+    write('You also gained '), write(IncFishExp), write(' Exp of fishing experiences,\n '),
     write(IncRanchExp), write(' Exp of ranching experiences,\nand '), 
     write(IncFarmExp), write(' Exp of farming experiences, \n'),
     write('\nThat\'s a lot of experiences! it makes you even more excited to work, doesn\'t it?\n'), 
@@ -173,3 +175,10 @@ reward:-
     gainExp(total, IncExp),
     generateNewQuestPlace,
     !.
+
+reward:-
+    allQuestCompleted,
+    write('\nCongratulations! You\'ve completed all the quests, go to \'Q\' tile to claim your reward(s)\n'), !.
+
+reward:-
+    write('\nWhat reward? You haven\'t completed all the quests!\n'), !.

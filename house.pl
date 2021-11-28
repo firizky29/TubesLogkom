@@ -48,13 +48,32 @@ peri :-
         asserta(playerLoc(X1,Y1)),
         write('Anda berhasil teleport ke '), write(PLACE);
     A=:=2, 
-        write('Absis >> '), read(X),
-        write('Ordinat >> '), read(Y),
+        teleport
+    ).
+    
+teleport :- 
+    write('Absis >> '), read(X),
+    write('Ordinat >> '), read(Y),
+    nl,
+    cektile(Y,X,RES),
+    (RES =:= 0,
+        write('Masukan anda salah !! Masukkan koordinat dengan benar !!'), nl,
+        nl,
+        teleport
+        ;
+    RES =:= 1,
         retract(playerLoc(_,_)),
         asserta(playerLoc(Y,X)),
         write('Anda berhasil teleport ke ('), write(X), write(','), write(Y), write(')')
-    ).
-    
+    ). 
+
+cektile(X,Y,RES) :-
+    tile(X,Y,water), RES is 0, !.
+
+cektile(X,Y,RES) :-
+    tile(X,Y,_), RES is 1, !.
+
+cektile(_,_,0).
 
 /*
 writeDiary :- !.

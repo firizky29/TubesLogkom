@@ -91,6 +91,12 @@ buy_choice(ITEM) :-
     write('Uang anda tidak mencukupi !!')).
 
 buyanimal_choice(ITEM) :-
+    animal_count(ITEM,Y),
+    Y > 5,
+    write(ITEM), write(' sudah mencapai max capacity (5)'),
+    !.
+    
+buyanimal_choice(ITEM) :-
     write('Berapa banyak '), write(ITEM), write(' yang ingin anda beli?'), nl,
     nl, write('>> '),
     read(X),
@@ -102,7 +108,14 @@ buyanimal_choice(ITEM) :-
     MONEY_AFTER is MONEY-A,
     retract(money(_)),
     asserta(money(MONEY_AFTER)),
-    retract(animal_count(ITEM,Y)), Z is X+Y,    
+    day(DAY),
+    (
+        animal_buy(ITEM,COUNT,DAY),
+        retract(animal_buy(ITEM,COUNT,DAY)), NEWCOUNT is COUNT+X,
+        asserta(animal_buy(ITEM,NEWCOUNT,DAY));
+        asserta(animal_buy(ITEM,X,DAY))
+    ),
+    retract(animal_count(ITEM,Y)), Z is X+Y,  
     asserta(animal_count(ITEM,Z)),
     write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dibeli !'), !; 
     write('Uang anda tidak mencukupi !!')).
@@ -170,28 +183,3 @@ sell_choice(ITEM) :-
         nl,nl, write('Uang anda sekarang : '), write(MONEY_AFTER), write(' gold');
         write('Jumlah barang di inventory kamu kurang dari '), write(X)
     ), !.
-
-/*
-wortel :- .
-
-lobak :- .
-
-kentang :- .
-
-bawang :- .
-
-tomat :- .
-
-ayam :- .
-
-domba :- .
-
-sapi :- .
-
-telur :- .
-
-sutra :- .
-
-daging :- .
-
-*/

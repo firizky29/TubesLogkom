@@ -8,6 +8,28 @@ rarity(lele, 30).
 rarity(nila, 25).
 rarity(mujair, 20).
 
+increaseFishingExp(Item, Exp):-
+    inventory(fishing_rod, _, FishingRodLevel),
+    playerRole(fish),
+    fishListGenerator(L),
+    length(L, Len),
+    rarity(Item, X),
+    Rarity is floor((Len-X)*100/Len),
+    random(30, 41, Mult),
+    Percentage is (100 + Rarity),
+    Exp is (Percentage*Mult*FishingRodLevel) div 100, !.
+
+increaseFishingExp(Item, Exp):-
+    inventory(fishing_rod, _, FishingRodLevel),
+    fishListGenerator(L),
+    length(L, Len),
+    rarity(Item, X),
+    Rarity is floor((Len-X)*100/Len),
+    random(20, 31, Mult),
+    Percentage is (100 + Rarity),
+    Exp is (Percentage*Mult*FishingRodLevel) div 100, !.
+
+
 isAroundWater:-
     playerLoc(XP, YP),
     X1 is XP-1,
@@ -43,6 +65,7 @@ countEmpty(X):-
     length(L, Len),
     X is 80*Len div 100, !.
 
+
 fishGenerator:-
     forall((inventory(Fish, fish, _), rarity(Fish, Rarity), between(1, Rarity, _)), (
         fishListGenerator(L),
@@ -58,6 +81,10 @@ fishGenerator:-
         retract(fishListGenerator(L))
     )),
     !.
+
+fish:-
+    inventory(fishing_rod, _, 0),
+    write('\nYou have to buy a fishing rod before you fish, you can buy it at the marketplace\n'), !.
 
 fish :-
     isAroundWater,
@@ -80,7 +107,17 @@ gotFishInterface(FishFished):-
     asserta(inventory(FishFished, fish, New)),
     write('Amazing! you got a(n) '),
     write(FishFished),
-    write('!'), nl, !.
+    write('!'), nl, 
+    increaseFishingExp(FishFished, Exp),
+    gainExp(fish, Exp),
+    TotalExp is (Exp*120) div 100,
+    gainExp(total, TotalExp),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp and '),
+    write(Exp),
+    write(' Fishing Exp. \n Amazing!\n'),
+    !.
 
 gotFishInterface(FishFished):-
     retract(inventory(FishFished, fish, Previous)),
@@ -88,4 +125,14 @@ gotFishInterface(FishFished):-
     asserta(inventory(FishFished, fish, New)),
     write('Amazing! you got a(n) '),
     write(FishFished),
-    write('!'), nl, !.
+    write('!'), nl, 
+    increaseFishingExp(FishFished, Exp),
+    gainExp(fish, Exp),
+    TotalExp is (Exp*120) div 100,
+    gainExp(total, TotalExp),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp and '),
+    write(Exp),
+    write(' Fishing Exp. \n Amazing!\n'),
+    !.

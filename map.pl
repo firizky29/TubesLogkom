@@ -222,24 +222,23 @@ buildPond(X, Y):-
     )),
     !.
 
-printCoor(X, Y):-
-    playerLoc(X, Y),
-    tile(X, Y, ID),
-    itemType(ID,farm),
-    Plant is ID,
-    plantData(X,Y, Plant, _, DayAbleToHarvest),
-    day(Day),
-    DayAbleToHarvest =< Day,
-    tileSymbol(Plant, CharPlant),
-    lower_upper(CharPlant, CharPlantHarvest),
-    write(CharPlantHarvest),
-    !.
 
 printCoor(X, Y):-
     playerLoc(XP, YP),
     X is XP,
     Y is YP,
     write('P'),
+    !.
+
+printCoor(X, Y):-
+    tile(X, Y, Plant),
+    itemType(Plant, farm),
+    plantData(X,Y, Plant, _, DayAbleToHarvest),
+    day(Day),
+    DayAbleToHarvest =< Day,
+    tileSymbol(Plant, CharPlant),
+    lower_upper(CharPlant, CharPlantHarvest),
+    write(CharPlantHarvest),
     !.
 
 printCoor(X, Y):-

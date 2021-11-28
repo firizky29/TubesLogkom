@@ -42,6 +42,9 @@ increaseFarmingExp(Exp):-
     random(20, 31, Mult),
     Exp is (Mult*ShovelLevel), !.
 
+dig:-
+    inventory(shovel, _, 0),
+    write('\nYou have to buy a shovel before you dig, go to marketplace to look for it\n'), !.
 
 dig:-
     playerLoc(X,Y),
@@ -74,32 +77,34 @@ plant:-
         writeinvent(Seed, seed, Count)
     )),
     write('Which seed do you want to plant? '),
-    read(Plant),
-    plantAttempt(Plant), !.
+    read(Input),
+    plantAttempt(Input), !.
 
 
 plant :-
     write('You can\'t plant on an undigged soil!'),
     nl, !.
 
-plantAttempt(Plant):-
+plantAttempt(Input):-
+    plantOfSeed(Plant, Input),
     inventory(Plant, seed, Cnt), Cnt > 0,
-    plantOfSeed(Seed, Plant),
-    reduceSeedCount(Seed, 1),
+    reduceSeedCount(Plant, 1),
     write('\nYou managed to plant a(n) '),
-    write(Plant),
+    write(Input),
     write(' seed.'),
     nl,
-    plantOfSeed(Seed, Plant),
     retract(tile(X,Y,_)),
-    asserta(tile(X,Y,Plant)),
+    asserta(tile(X,Y,Input)),
+    NewCount is Cnt - 1,
+    retract(inventory(Plant, seed, _)),
+    asserta(inventory(Plant, seed, NewCount)),
     day(DayPlanted),
-    growDays(Plant, GrowDays),
+    growDays(Input, GrowDays),
     DayAbleToHarvest is DayPlanted + GrowDays,
-    asserta(plantData(X, Y, Plant, DayPlanted, DayAbleToHarvest)),!.
+    asserta(plantData(X, Y, Input, DayPlanted, DayAbleToHarvest)),!.
 
-plantAttempt(Plant):-
-    write('\nFailed to plant a(n) '), write(Plant),
+plantAttempt(Input):-
+    write('\nFailed to plant a(n) '), write(Input),
     write(' seed. Try Again.'), nl, !.
 
 
@@ -139,6 +144,9 @@ harvest:-
     write(Plant),
     !.
 
+harvest:-
+    write('You have nothing to be harvested in this tile\n'), !.
+
 harvestGain(Item):-
     addProgress(Item, 1),
     increaseFarmingExp(Exp),
@@ -147,15 +155,12 @@ harvestGain(Item):-
     gainExp(total, TotalExp),
     write('You gained '),
     write(TotalExp),
-    write(' Exp.\n'),
-    write('You gained '),
-    write(TotalExp),
     write(' Exp and '),
     write(Exp),
-    write(' Exp. \n How cool is that?\n'),
+    write(' Farming Exp. \n How cool is that?\n'),
     !.
 
-harvestGain(Item):-
+harvestGain(_):-
     increaseFarmingExp(Exp),
     gainExp(farm, Exp),
     TotalExp is (Exp*120) div 100,

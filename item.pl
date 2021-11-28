@@ -1,11 +1,24 @@
 :- dynamic(itemType / 1).
 :- dynamic(inventory / 3).
 % Item Type
-itemType(fish).
-itemType(gardening).
+itemType(arwana,fish).
+itemType(gurame,fish).
+itemType(lele,fish).
+itemType(mujair,fish).
+itemType(nila,fish).
+% itemType(gardening).
+itemType(wortel,farm).
+itemType(lobak,farm).
+itemType(kentang,farm).
+itemType(bawang,farm).
+itemType(tomat,farm).
 itemType(equipment).
 itemType(seed).
-itemType(produce).
+% itemType(produce).
+itemType(telur,ranch).
+itemType(sutra,ranch).
+itemType(daging,ranch).
+
 
 % Inventory 
 inventory(arwana, fish, 1).

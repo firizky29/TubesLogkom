@@ -4,7 +4,7 @@
 
 % TODO: Integrasi daynya
 
-day(0)
+day(0).
 ranch_animal(ayam).
 ranch_animal(sapi).
 ranch_animal(domba).

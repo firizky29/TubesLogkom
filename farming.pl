@@ -70,7 +70,7 @@ plant:-
     retract(tile(X,Y,_)),
     asserta(tile(X,Y,Plant)),
     retract(plantData(X,Y,_,_,_)),
-    Day(DayPlanted),
+    day(DayPlanted),
     growDays(Plant, GrowDays),
     asserta(plantData(X,Y,Plant,DayPlanted,DayPlanted + GrowDays)).
 
@@ -79,7 +79,7 @@ harvest:-
     tile(X,Y,Tile),
     inventory(Tile, gardening, PrevCount),
     plantData(X,Y,Plant,_,DayAbleToHarvest),
-    Day(Day),
+    day(Day),
     DayAbleToHarvest =:= Day,
     NewCount is PrevCount + 1,
     retract(inventory(Tile, gardening, _)),

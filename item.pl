@@ -17,7 +17,7 @@ itemType(tomat,farm).
 % itemType(produce).
 itemType(telur,ranch).
 itemType(sutra,ranch).
-itemType(daging,ranch).
+itemType(susu,ranch).
 
 
 % Inventory 
@@ -41,7 +41,7 @@ inventory(bibit_bawang, seed, 0).
 inventory(bibit_tomat, seed, 0).
 inventory(telur, produce, 1).
 inventory(sutra, produce, 2).
-inventory(daging, produce, 3).
+inventory(susu, produce, 3).
 
 % Harga
 price(arwana, 100).
@@ -64,7 +64,7 @@ price(domba, 300).
 price(sapi, 400).
 price(telur, 100).
 price(sutra, 150).
-price(daging, 200).
+price(susu, 200).
 
 price_upgrade_to(shovel,1,100).
 price_upgrade_to(shovel,2,100).

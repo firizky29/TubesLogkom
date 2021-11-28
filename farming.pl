@@ -54,7 +54,7 @@ dig :-
 plant :-
     playerLoc(X,Y),
     tile(X,Y,Tile),
-    Tile =/= digged,
+    Tile \= digged,
     write("You can't plant on an undig soil!"),
     nl, !.
 

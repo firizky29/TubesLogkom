@@ -1,6 +1,6 @@
 
 cheat :- 
-    initMap,
+    % initMap,
     retract(playerLoc(_, _)),
     tile(X,Y,marketplace),
     asserta(playerLoc(X,Y)), !.
@@ -130,7 +130,7 @@ sell :-
     tile(X,Y,marketplace), 
     write('Anda memiliki beberapa item di inventory :'),nl,nl,
     tampilinventory,
-    nl, write('Apa yang ingin anda jual?'),nl,nl,
+    nl, write('Apa yang ingin anda jual? (nama item)'),nl,nl,
     write('>> '),read(ITEM), nl,
     sell_choice(ITEM),
     !.
@@ -139,22 +139,34 @@ sell :-
 sell :-
     write('Anda tidak sedang berada di Market !').
 
+plusSell(PRICE,TYPE,PLUS) :-
+    playerLevel(TYPE,LVL),
+    playerLevel(total,LVL_TOT),
+    (
+        playerRole(TYPE),
+        PLUS is (LVL*PRICE*45)//100 + LVL_TOT*5;
+        PLUS is (LVL*PRICE*25)//100 + LVL_TOT*5
+    ).
+
 sell_choice(ITEM) :-
     write('Berapa banyak '), write(ITEM), write(' yang ingin anda jual?'), nl,
     nl, write('>> '),
     read(X),
     nl,
     inventory(ITEM,_TYPE,Y),
+    itemType(ITEM,I_TYPE),
     price(ITEM, PRICE),
     money(MONEY),
     (
         X =< Y,
-        MONEY_AFTER is MONEY+X*PRICE,
+        plusSell(PRICE,I_TYPE,PLUS),
+        MONEY_GAIN is X*PRICE+PLUS,
+        MONEY_AFTER is MONEY+MONEY_GAIN,
         retract(money(_)),
         asserta(money(MONEY_AFTER)),
         retract(inventory(ITEM,_TYPE,Y)), Z is Y-X,    
         asserta(inventory(ITEM,_TYPE,Z)),
-        write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dijual !'),
+        write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dijual seharga '), write(MONEY_GAIN), write(' gold !'),
         nl,nl, write('Uang anda sekarang : '), write(MONEY_AFTER), write(' gold');
         write('Jumlah barang di inventory kamu kurang dari '), write(X)
     ), !.

@@ -1,7 +1,12 @@
 :- include('map.pl').
+:- include('item.pl').
+:- include('player.pl').
 :- dynamic(animal_count/2).
 :- dynamic(last_ranch_visit/1).
 
+% TODO: Integrasi daynya
+
+day(0)
 ranch_animal(ayam).
 ranch_animal(sapi).
 ranch_animal(domba).
@@ -21,14 +26,60 @@ ranch :-
            )
           ),
     write('What do you want to do?'),nl.
+% TODO: change egg production logic to depend on chickens's age
+eggProduction(M) :-
+    day(D),
+    last_ranch_visit(LastVisit),
+    Diff is D - LastVisit,
+    animal_count(ayam,AyamCount),
+    random(0,0.8,P),
+    M is AyamCount * Diff * round(2 * P).
+
+% TODO: change wool production logic to depend on sheep's age
+woolProduction(M) :-
+    day(D),
+    last_ranch_visit(LastVisit),
+    Diff is D - LastVisit,
+    animal_count(domba,DombaCount),
+    random(0,0.4,P),
+    M is DombaCount * Diff * round(2 * P).
+
+% TODO: Change meat production logic to counts of the cow and its ages
+meatProduction(M) :-
+    day(D),
+    last_ranch_visit(LastVisit),
+    Diff is D - LastVisit,
+    animal_count(sapi,SapiCount),
+    random(0,0.2,P),
+    M is SapiCount * Diff * round(2 * P).
 
 ayam :-
-    tile(X,Y,ranch).
-    % gotta research how ayam reproduce
+    tile(X,Y,ranch),
+    write('Your chicken lays '),
+    eggProduction(M),
+    write(M),
+    write(' eggs.'),nl,
+    inventory(telur, produce, ExistingEggs),
+    NewEggs is ExistingEggs + M,
+    retract(inventory(telur, produce, _)),
+    asserta(inventory(telur, produce, NewEggs)),
+    write('You got '),
+    write(M),
+    write(' new eggs.'),nl,
+    write('Now, you have '),
+    write(NewEggs),
+    write(' eggs.'),nl.
+    ranchingExp(PreviousExp),
+    NewExp is PreviousExp + 6,
+    retract(ranchingExp(_)),
+    asserta(ranchingExp(NewExp)),
+    write('You gain 6 ranching exp').
+
 
 domba :-
-    tile(X,Y,ranch).
-    % gotta research how domba reproduce
+    tile(X,Y,ranch),
+
+    
 
 sapi :-
     tile(X,Y,ranch).

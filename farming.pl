@@ -15,7 +15,7 @@ plantOfSeed(bibit_bawang, bawang).
 plantOfSeed(bibit_tomat, tomat).
 
 % PLANT STATUS SO THAT IT CAN BE HARVESTED
-plantData(I, J, Plant, DayPlanted, DayAbleToHarvest).
+plantData(0, 0, empty, 0, 0).
 
 
 % GROWING DAYS
@@ -83,7 +83,7 @@ harvest:-
     DayAbleToHarvest =:= Day,
     NewCount is PrevCount + 1,
     retract(inventory(Tile, gardening, _)),
-    asserta(inventory(Tile, gardening, NewCount)).
+    asserta(inventory(Tile, gardening, NewCount)),
     write('You harvested '),
     write(Tile),
     write(' .'),

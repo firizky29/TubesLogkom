@@ -3,7 +3,7 @@
 :- dynamic(playerExp/2).
 :- dynamic(money/1).
 :- dynamic(growthExp/2).
-:- include('map.pl').
+
 
 playerRole(0).
 playerExp(0, 0).

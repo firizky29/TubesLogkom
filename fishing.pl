@@ -1,10 +1,3 @@
-
-inventory(arwana, fish, 1).
-inventory(gurame, fish, 1).
-inventory(lele, fish, 1).
-inventory(mujair, fish, 1).
-inventory(nila, fish, 1).
-
 isAroundWater:-
     tile(XP, YP, player),
     X1 is XP-1,
@@ -47,7 +40,7 @@ fish :-
     getFish(FishFished),
     retract(inventory(FishFished, fish, Previous)),
     New is Previous + 1,
-    assert(inventory(FishFished, fish, New)),
+    asserta(inventory(FishFished, fish, New)),
     write('You got a '),
     write(FishFished),
     write('!'),nl,!.

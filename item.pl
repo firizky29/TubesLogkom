@@ -1,6 +1,5 @@
 :- dynamic(itemType / 1).
 :- dynamic(inventory / 3).
-
 % Item Type
 itemType(fish).
 itemType(gardening).

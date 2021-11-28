@@ -1,3 +1,4 @@
+
 insertAt(A, E, 0, [E|A]). 
 /* Deklarasi Rules */ 
 insertAt([X|A], E, P, [X|L1]):-

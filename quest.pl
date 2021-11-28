@@ -1,8 +1,7 @@
 :- dynamic(questTarget/2). %questTarget(type, target)
 :- dynamic(questTargetItem/2). %questTargetItem(type, item)
 :- dynamic(questProgress/2).
-:- include('player.pl').
-:- include('item.pl').
+
 
 questTarget(_, 0).
 questProgress(_, 0).
@@ -109,14 +108,26 @@ generateQuestTarget:-
     !.
 
 quest:-
-    % playerLoc(XP, YP),
-    % tile(XP, YP, quest),
-    startGame,
-    start,
-    write('Quest\n'),
+    allQuestCompleted,
+    playerLoc(XP, YP),
+    tile(XP, YP, quest),
+    write('\nWow! you\'ve completed all the quests, type \'reward\' to claim your reward(s)\n'), !.
+
+quest:-
+    playerLoc(XP, YP),
+    tile(XP, YP, quest),
+    write('these are the quests you need to complete, cheers :D \n'),
+    write('=================================================================\n'),
     findall(Items, questTargetItem(_, Items), L),
     forall((between(1, 3, I), nth1(I, L, Item), questTargetItem(Type, Item), questProgress(Type, A), questTarget(Type, B)), (
-        write(I), write(' '), write(Item), write(' '), write(A), write(' '), write(B), nl
+        write(I), write('. '), write(Item), write(' : '), write(A), write('/'), write(B), nl
     )), !.
+
+quest:-
+    allQuestCompleted,
+    write('\nCongratulations! You\'ve completed all the quests, go to \'Q\' tile to claim your reward(s)\n'), !.
+
+quest:-
+    write('\nYou have (an) active quest(s), to find out what quest(s) to be completed, please come to the \'Q\' tile'), !.
 
 

@@ -3,8 +3,6 @@
 :- dynamic(playerLoc/2).
 :- dynamic(tile/3).
 :- dynamic(listOfEmptyTile/1).
-:- include('lib.pl').
-
 
 tileSymbol(border, '#').
 tileSymbol(empty, '-').

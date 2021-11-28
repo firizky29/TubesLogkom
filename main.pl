@@ -87,20 +87,20 @@ help :-
 help :-
     write('this is your list of commands, have fun!'), nl,
     write('=================================================================\n'),
-    write('1.  map          : '), nl,
-    write('2.  w            : '), nl,
-    write('3.  a            : '), nl,
-    write('4.  s            : '), nl,
-    write('5.  d            : '), nl,
-    write('6.  market       : '), nl,
-    write('7.  house        : '), nl,
-    write('8.  ranch        : '), nl,
-    write('9.  fish         : '), nl,
-    write('10. dig          : '), nl,
-    write('11. plant        : '), nl,
-    write('12. harvest      : '), nl,
-    write('13. inventory    : '), nl,
-    write('14. status       : '), !.
+    write('1.  map          : untuk menampilkan peta '), nl,
+    write('2.  w            : bergerak ke atas '), nl,
+    write('3.  a            : bergerak ke bawah '), nl,
+    write('4.  s            : bergerak ke kiri '), nl,
+    write('5.  d            : bergerak ke kanan '), nl,
+    write('6.  market       : masuk ke dalam market (harus berada di market) '), nl,
+    write('7.  house        : masuk ke dalam house (harus berada di house) '), nl,
+    write('8.  ranch        : masuk ke dalam ranch (harus berada di ranch) '), nl,
+    write('9.  fish         : untuk memulai fishing '), nl,
+    write('10. dig          : untuk menggali lahan kosong (lalu akan ditanami tanaman) '), nl,
+    write('11. plant        : untuk menanam tanaman '), nl,
+    write('12. harvest      : untuk panen '), nl,
+    write('13. inventory    : untuk memperlihatkan isi inventory '), nl,
+    write('14. status       : untuk memperlihatkan status player '), !.
 
 
 status :-

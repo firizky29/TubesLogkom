@@ -119,17 +119,10 @@ upgrade_choice(ITEM, LV) :-
     write(ITEM), write(' telah berhasil di upgrade ke level '), write(LV), write(' !! '), !; 
     write('Uang anda tidak mencukupi !!')).
 
-writeinvent(NAME, COUNT) :-
-    COUNT > 0,
-    write('-  '), write(COUNT), write(' '), write(NAME), nl. 
-
-writeinvent(_, _) :-
-    !. 
-
 tampilinventory :- 
-    forall(inventory(X, fish, _A), writeinvent(X, _A)),
-    forall(inventory(Y, gardening, _B), writeinvent(Y, _B)),
-    forall(inventory(Z, produce, _C), writeinvent(Z, _C)),
+    forall(inventory(X, fish, _A), writeinvent(X,_, _A)),
+    forall(inventory(Y, gardening, _B), writeinvent(Y,_, _B)),
+    forall(inventory(Z, produce, _C), writeinvent(Z,_, _C)),
     !.
 
 sell :- 

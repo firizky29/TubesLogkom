@@ -76,8 +76,8 @@ plant:-
     forall(inventory(Seed, seed, Count), (
         writeinvent(Seed, seed, Count)
     )),
-    write('Which seed do you want to plant? '),
-    read(Input),
+    write('Which seed do you want to plant? (type the name of the seed you desire to plant)\n>>> '),
+    read(Input),nl,
     plantAttempt(Input), !.
 
 
@@ -165,9 +165,6 @@ harvestGain(_):-
     gainExp(farm, Exp),
     TotalExp is (Exp*120) div 100,
     gainExp(total, TotalExp),
-    write('You gained '),
-    write(TotalExp),
-    write(' Exp.\n'),
     write('You gained '),
     write(TotalExp),
     write(' Exp and '),

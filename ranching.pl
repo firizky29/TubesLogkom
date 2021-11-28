@@ -1,13 +1,13 @@
-
 :- dynamic(animal_count/2).
-:- dynamic(last_ranch_visit_chicken/1).
-:- dynamic(last_ranch_visit_cow/1).
-:- dynamic(last_ranch_visit_sheep/1).
+:- dynamic(animal_production/2).
+
+animal_production(sapi, 0).
+animal_production(domba, 0).
+animal_production(ayam, 0).
 
 animal_buy(ayam,0,0).
 animal_buy(sapi,0,0).
 animal_buy(domba,0,0).
-
 
 ranch_animal(ayam).
 ranch_animal(sapi).
@@ -17,11 +17,15 @@ animal_count(ayam,0).
 animal_count(sapi,0).
 animal_count(domba,0).
 
+itemExp(susu, 10).
+itemExp(telur, 5).
+itemExp(sutra, 12).
+
 displayAnimal(X):-
     animal_count(X,Y),
     Y > 0,
     write(Y),write(' '),write(X),nl.
-displayAnimal(_):-
+    displayAnimal(_):-
     !.
 
 ranchCheat :-
@@ -33,18 +37,16 @@ ranch :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
     forall(animal_count(_, Count), Count=:=0),
-    write('You have no animal, you can buy it in the market!'), nl, !.
+    write('You have no animal, you can buy it at the marketplace!'), nl, !.
 
 ranch :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
     write('Welcome to the ranch! You have:'),nl,
-    forall(ranch_animal(Animal),
-           (
-               displayAnimal(Animal)
-           )
-          ),
-    write('What animal do you want to inspect?'),nl,
+    forall(ranch_animal(Animal), (
+        displayAnimal(Animal)
+    )),
+    write('What animal do you want to inspect? (type the kind of animal to be inspected)'),nl,
     write('>>> '),
     read(Animal),
     viewAnimal(Animal),!.
@@ -56,25 +58,34 @@ daily_production_limit(ayam, 3).
 daily_production_limit(sapi, 3).
 daily_production_limit(domba, 1).
 
-production(Animal,M) :-
+production(Animal) :-
     day(D),
-    M is 0,
-    forall(animal_buy(Animal, Count, DayBuy), (
+    forall(animal_buy(Animal, Count, DayTaken), (
         random(P),
-        Diff is D - DayBuy,
+        animal_production(Animal, X),
+        Diff is D - DayTaken,
         daily_production_limit(Animal, Limit),
-        M is M + Count * Diff * round(Limit * P)
+        Y is X + Count * Diff * round(Limit * P),
+        retract(animal_production(Animal, X)),
+        asserta(animal_production(Animal, Y))
     )), !.
 
-increaseRanchingExp(ProductionCount, M) :-
-    M is ProductionCount * 4, 
-    gainExp(ranch, M), !.
+production_return(Animal):-
+    day(D),
+    findall(Count, animal_buy(Animal, Count, _), L),
+    sum_list(L, Counts),
+    retractall(animal_buy(Animal, _, _)),
+    asserta(animal_buy(Animal, Counts, D)), !.
 
-    
+increaseRanchingExp(ProductionCount, Exp, Item) :-
+    itemExp(Item, Gain),
+    Exp is ProductionCount * Gain, !.
+
 viewAnimal(ayam) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
-    production(ayam,M),
+    production(ayam),
+    animal_production(ayam,M),
     M > 0,
     write('Your chicken lays '),
     write(M),
@@ -86,10 +97,7 @@ viewAnimal(ayam) :-
     write('Now, you have '),
     write(NewEggs),
     write(' eggs.'),nl,
-    increaseRanchingExp(M, NewExp),
-    write('You gain '),
-    write(NewExp),
-    write(' exp.'),nl,!.
+    animalGain(telur, M), !.
 
 viewAnimal(ayam) :-
     write('Your chicken lays no eggs today <(＿　＿)>'),nl,!.
@@ -97,7 +105,8 @@ viewAnimal(ayam) :-
 viewAnimal(domba) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
-    production(domba,M),
+    production(domba),
+    animal_production(domba,M),
     M > 0,
     write('Your sheep produces '),
     write(M),
@@ -109,10 +118,7 @@ viewAnimal(domba) :-
     write('Now, you have '),
     write(NewWool),
     write(' kg of wool.'),nl,
-    increaseRanchingExp(M, NewExp),
-    write('You gain '),
-    write(NewExp),
-    write(' exp.'),nl,!.
+    animalGain(sutra, M), !.
 
 viewAnimal(domba) :-
     write('Your sheep create no wools today <(＿　＿)>'),nl,!.
@@ -120,7 +126,8 @@ viewAnimal(domba) :-
 viewAnimal(sapi) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),
-    production(sapi,M),
+    production(sapi),
+    animal_production(sapi,M),
     M > 0,
     write('Your cow produces '),
     write(M),
@@ -132,13 +139,35 @@ viewAnimal(sapi) :-
     write('Now, you have '),
     write(NewMilk),
     write(' litres of milk.'),nl,
-    increaseRanchingExp(M, NewExp),
-    write('You gain '),
-    write(NewExp),
-    write(' exp.'),nl,!.
+    animalGain(susu, M), !.
 
 viewAnimal(sapi) :-
-    write('Your cow not produce milks today <(＿　＿)>'),nl,!.
+    write('Your cow is\'nt producing any milk today <(＿　＿)>'),nl,!.
 
 viewAnimal(_) :-
     write('No animal like that here!'),nl,!.
+
+animalGain(Item, M):-
+    addProgress(Item, 1),
+    increaseRanchingExp(M, Exp, Item),
+    gainExp(ranch, Exp),
+    TotalExp is (Exp*120) div 100,
+    gainExp(total, TotalExp),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp and '),
+    write(Exp),
+    write(' Ranching Exp. \nAwesome!\n'),
+    !.
+
+animalGain(Item, M):-
+    increaseRanchingExp(M, Exp, Item),
+    gainExp(ranch, Exp),
+    TotalExp is (Exp*120) div 100,
+    gainExp(total, TotalExp),
+    write('You gained '),
+    write(TotalExp),
+    write(' Exp and '),
+    write(Exp),
+    write(' Ranching Exp. \nAwesome!\n'),
+    !.

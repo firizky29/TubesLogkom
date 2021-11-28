@@ -1,6 +1,6 @@
 :- dynamic(gameState / 1). /* gameState(isGameOn/Off) */
 :- dynamic(inGameState/1).
-:- include('player.pl').
+:- include('quest.pl').
 
 gameState(0).
 inGameState(0).

@@ -119,17 +119,18 @@ buildMap:-
     deleteNeighborof(XQ, YQ, L4, T5),
     retract(tile(XQ, YQ, _)),
     asserta(tile(XQ, YQ, quest)),
+    generateQuestTarget,
 
     retract(listOfEmptyTile(_)),
     asserta(listOfEmptyTile(T5)),
-
+    
     % TODO: Initialize First Quest
     % TODO: mekanisme Quest
 
     !.
     
 generateNewQuestPlace:-
-    tile(XQ, YQ, Quest),
+    tile(XQ, YQ, quest),
     returnDeletedCoordinate(XQ, YQ),
     listOfEmptyTile(L),
     length(L, Len),
@@ -140,6 +141,7 @@ generateNewQuestPlace:-
     asserta(tile(XQ, YQ, quest)),
     retract(listOfEmptyTile(_)),
     asserta(listOfEmptyTile(Res)),
+    generateQuestTarget,
     !.
 
 

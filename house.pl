@@ -7,12 +7,15 @@ house :-
     tile(X,Y,house),
     write('What do you want to do?'), nl,
     write('-  sleep'), nl,
-    write('-  exit'), !.
+    write('-  exit'), nl,
+    nl,
+    write('>> '), read(COMMAND),
+    house_choice(COMMAND), !.
 
 house :-
     write('Anda tidak sedang berada di House !').
     
-sleep :- 
+house_choice(sleep) :- 
     playerLoc(X,Y),
     tile(X,Y,house),
     retract(day(TODAY)), TOMORROW is TODAY+1,
@@ -27,8 +30,10 @@ sleep :-
         nl, nl, house
     ), !.
 
-sleep :-
-    write('Anda tidak sedang berada di House !').
+house_choice(sleep) :-
+    write('Anda tidak sedang berada di hehe !').
+
+house_choice(exit).
 
 peri :-
     write('Tadi malam kamu bermimpi bertemu dengan peri tidur, dan sekarang kamu punya kemampuan untuk teleportasi'),nl,
@@ -41,8 +46,8 @@ peri :-
     (A=:=1, 
         write('- marketplace\n'),
         write('- ranch\n'),
-        write('- quest\n'),
-        write('>> '), read(PLACE),
+        write('- quest\n'), nl,
+        write('>> '), read(PLACE), nl,
         tile(X1,Y1,PLACE),
         retract(playerLoc(_,_)),
         asserta(playerLoc(X1,Y1)),
@@ -74,9 +79,3 @@ cektile(X,Y,RES) :-
     tile(X,Y,_), RES is 1, !.
 
 cektile(_,_,0).
-
-/*
-writeDiary :- !.
-
-readDiary :- !.
-*/

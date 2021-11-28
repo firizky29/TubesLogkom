@@ -1,6 +1,16 @@
+:- include('map.pl').
+:- include('item.pl').
+% :- include('farming.pl').
+:- include('fishing.pl').
+% :- include('ranching.pl').
+:- include('house.pl').
+:- include('market.pl').
+:- include('player.pl').
+:- include('quest.pl').
+
+
 :- dynamic(gameState / 1). /* gameState(isGameOn/Off) */
 :- dynamic(inGameState/1).
-:- include('quest.pl').
 
 gameState(0).
 inGameState(0).
@@ -13,15 +23,14 @@ inGameOn:-
     retract(inGameState(_)),
     asserta(inGameState(1)), !.
 
-
 /* Rule */
 startGame :-
     gameState(0),
-    write(' _   _                           _      _    _                    '), nl,
-    write('| | | | __ _ _ ____   _____  ___| |_   | \\  / | ___   ___  _  __  '), nl,
-    write('| |_| |/ _` | \'__\\ \\ / / _ \\/ __| __|  |  \\/  |/ _ \\ / _ \\| |/  | '), nl,
-    write('|  _  | (_| | |   \\ V /  __/\\__ \\ |_   | |\\/| | (_) | (_) |  /| | '), nl,
-    write('|_| |_|\\__,_|_|    \\_/ \\___||___/\\__|  |_|  |_|\\___/ \\___/|_| |_| '), nl,
+    write('    _   _                           _          _'), nl,
+    write('   | | | | __ _ _ ____   _____  ___| |_    ___| |_  __ _ _ __'), nl,
+    write('   | |_| |/ _` | \'__\\ \\ / / _ \\/ __| __|  / __| __|/ _` | \'__|'), nl,
+    write('   |  _  | (_| | |   \\ V /  __/\\__ \\ |_   \\__ \\ |_| (_| | |'), nl,
+    write('   |_| |_|\\__,_|_|    \\_/ \\___||___/\\__|  |___/\\__|\\__,_|_|'), nl,
     nl,
     write('I Got Scammed By My Client And Have to Restart My Life As A Farmer'), nl,
     nl,
@@ -92,21 +101,20 @@ help :-
     write('14. status       : '), !.
 
 status :-
-    inGameState(1),
     write('this is your current status, keep up your good work and have fun!\n'),
     write('=================================================================\n'),
     playerRole(Role),
     roleDisplay(Role, PlayerRole),
-    playerLevel(total, Level),
-    playerLevel(fish, FishLevel),
-    playerLevel(ranch, RanchLevel),
-    playerLevel(farm, FarmLevel),
-    playerExp(total, Exp),
-    playerExp(fish, FishExp),
-    playerExp(ranch, RanchExp),
-    playerExp(farm, FarmExp),
-    reqexp(total, Level, ReqExp),
+    playerLevel(Level),
+    fishingExp(FishExp),
+    farmingExp(FarmExp),
+    ranchingExp(RanchExp),
+    fishingLevel(FishLevel),
+    ranchingLevel(RanchLevel),
+    farmingLevel(FarmLevel),
     money(Gold),
+    playerExp(Exp),
+    reqexp(Level, ReqExp),
     
     write('Job              : '), write(PlayerRole), nl,
     write('Level            : '), write(Level), nl,
@@ -119,97 +127,3 @@ status :-
     write('Exp              : '), write(Exp), write('/'), write(ReqExp), nl,
     write('Gold             : '), write(Gold), nl, !.
 
-status :-
-    inGameState(0),
-    write('\nwhat status? You haven\'t started the game yet\n'), !.
-
-
-w :- 
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-w :-
-    playerLoc(X, _),
-    (X =:= 1),
-    write('You can\'t go beyond borders'), nl, !.
-
-w:-
-    playerLoc(X, Y),
-    X1 is X-1,
-    tile(X1, Y, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-w:- 
-    playerLoc(X, Y),
-    X1 is X-1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X1, Y)),
-    !.
-
-s :- 
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-s :-
-    playerLoc(X, _),
-    heightMap(H),
-    (X =:= (H-2)),
-    write('You can\'t go beyond borders'), nl, !.
-
-s:-
-    playerLoc(X, Y),
-    X1 is X+1,
-    tile(X1, Y, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-s:- 
-    playerLoc(X, Y),
-    X1 is X+1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X1, Y)),
-    !.
-
-a :- 
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-a :-
-    playerLoc(_, Y),
-    (Y =:= 1),
-    write('You can\'t go beyond borders'), nl, !.
-
-a:-
-    playerLoc(X, Y),
-    Y1 is Y-1,
-    tile(X, Y1, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-a:- 
-    playerLoc(X, Y),
-    Y1 is Y-1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y1)),
-    !.
-
-d :-
-    inGameState(0),
-    write('you haven\'t started the game yet!'), !.
-
-d :-
-    playerLoc(_, Y),
-    widthMap(W),
-    (Y =:= W-2),
-    write('You can\'t go beyond borders'), nl, !.
-
-d:-
-    playerLoc(X, Y),
-    Y1 is Y+1,
-    tile(X, Y1, water),
-    write('You can\'t swim, can you? stop playing around!'), nl, !.
-
-d:- 
-    playerLoc(X, Y),
-    Y1 is Y+1,
-    retract(playerLoc(_, _)),
-    asserta(playerLoc(X, Y1)),
-    !.

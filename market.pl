@@ -1,10 +1,4 @@
 
-:- include('item.pl').
-:- include('ranching.pl').
-
-:- dynamic(money / 1).
-money(1000).
-
 cheat :- 
     initMap,
     retract(playerLoc(_, _)),
@@ -25,7 +19,8 @@ market :-
 buy :- 
     playerLoc(X,Y),
     tile(X,Y,marketplace),
-    write('What do you want to buy?'), nl,
+    write('Apa yang ingin anda beli?'), nl,
+    nl,
     price(bibit_wortel, PRICE_WORTEL),
     write('1. Bibit wortel ('), write(PRICE_WORTEL), write(' golds)'), nl,
     price(bibit_lobak, PRICE_LOBAK),
@@ -45,11 +40,15 @@ buy :-
     inventory(shovel,equipment,LV_SHOVEL), 
     inventory(fishing_rod,equipment,LV_ROD),
     A is LV_SHOVEL+1, B is LV_ROD+1,
-    price_upgrade_to(shovel,A,PRICE_UPGRADE_SHOVEL),
-    price_upgrade_to(fishing_rod,B,PRICE_UPGRADE_ROD),
-    write('9. Level '), write(A), write(' shovel ('), write(PRICE_UPGRADE_SHOVEL), write(' golds)'), nl,
-    write('10. Level '), write(B), write(' fishing rod ('), write(PRICE_UPGRADE_ROD), write(' golds)'), nl,
-    write('11.Exit'),
+    (
+        price_upgrade_to(shovel,A,PRICE_UPGRADE_SHOVEL),A < 4, write('9. Level '), write(A), write(' shovel ('), write(PRICE_UPGRADE_SHOVEL), write(' golds)'); 
+        A >= 4, write('9. Shovel anda sudah mencapai max level')
+    ), nl,
+    (
+        price_upgrade_to(fishing_rod,B,PRICE_UPGRADE_ROD), write('10.Level '), write(B), write(' fishing rod ('), write(PRICE_UPGRADE_ROD), write(' golds)');
+        A >= 4, write('10.Fishing rod anda sudah mencapai max level')
+    ), nl,
+    write('11.Exit'), nl,
     nl,
     write('Masukkan nomor barang yang ingin dibeli!'), nl,
     nl,
@@ -67,7 +66,8 @@ buy :-
     C =:= 9, upgrade_choice(shovel, A);
     C =:= 10, upgrade_choice(fishing_rod, B);
     C =:= 11, write('Terimakasih telah berkunjung ke shop !!');
-    write('Masukan anda salah!')), !.
+    write('Masukan anda salah!'), nl, nl, buy), 
+    !.
 
 buy :-  
     write('>> Anda tidak sedang berada di Market !'), nl,
@@ -119,17 +119,10 @@ upgrade_choice(ITEM, LV) :-
     write(ITEM), write(' telah berhasil di upgrade ke level '), write(LV), write(' !! '), !; 
     write('Uang anda tidak mencukupi !!')).
 
-writeinvent(NAME, COUNT) :-
-    COUNT > 0,
-    write('-  '), write(COUNT), write(' '), write(NAME), nl. 
-
-writeinvent(_, _) :-
-    !. 
-
 tampilinventory :- 
-    forall(inventory(X, fish, _A), writeinvent(X, _A)),
-    forall(inventory(Y, gardening, _B), writeinvent(Y, _B)),
-    forall(inventory(Z, produce, _C), writeinvent(Z, _C)),
+    forall(inventory(X, fish, _A), writeinvent(X,_, _A)),
+    forall(inventory(Y, gardening, _B), writeinvent(Y,_, _B)),
+    forall(inventory(Z, produce, _C), writeinvent(Z,_, _C)),
     !.
 
 sell :- 
@@ -161,8 +154,8 @@ sell_choice(ITEM) :-
         asserta(money(MONEY_AFTER)),
         retract(inventory(ITEM,_TYPE,Y)), Z is Y-X,    
         asserta(inventory(ITEM,_TYPE,Z)),
-        write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dijual !');
-
+        write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dijual !'),
+        nl,nl, write('Uang anda sekarang : '), write(MONEY_AFTER), write(' gold');
         write('Jumlah barang di inventory kamu kurang dari '), write(X)
     ), !.
 

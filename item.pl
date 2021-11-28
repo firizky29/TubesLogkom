@@ -20,7 +20,7 @@ inventory(kentang, gardening, 1).
 inventory(bawang, gardening, 1).
 inventory(tomat, gardening, 1).
 inventory(fishing_rod,equipment,0).
-inventory(shovel,equipment,0).
+inventory(shovel,equipment,3).
 inventory(watering,equipment,0).
 inventory(bibit_wortel, seed, 0).
 inventory(bibit_lobak, seed, 0).
@@ -61,3 +61,18 @@ price_upgrade_to(shovel,3,100).
 price_upgrade_to(fishing_rod,1,100).
 price_upgrade_to(fishing_rod,2,100).
 price_upgrade_to(fishing_rod,3,100).
+
+writeinvent(NAME, equipment, LV) :-
+    inventory(NAME, equipment, LV),
+    LV > 0,
+    write('-  Level '), write(LV), write(' '), write(NAME), nl, !. 
+
+writeinvent(NAME, _, COUNT) :-
+    COUNT > 0,
+    write('-  '), write(COUNT), write(' '), write(NAME), nl. 
+
+writeinvent(_, _,_) :-
+    !. 
+
+inventory :- 
+    forall(inventory(X, _, _A), writeinvent(X,_, _A)).

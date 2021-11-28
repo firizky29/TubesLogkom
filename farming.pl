@@ -133,7 +133,7 @@ harvest:-
     tile(X,Y,Plant),
     plantData(X,Y,Plant,_,DayAbleToHarvest),
     day(Day),
-    DayAbleToHarvest =\= Day, 
+    DayAbleToHarvest > Day, 
     write('You cannot harvest '),
     write(Plant),
     write(' .'),

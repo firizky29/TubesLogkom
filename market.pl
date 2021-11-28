@@ -1,4 +1,4 @@
-
+:- dynamic(animal_buy/3).
 cheat :- 
     % initMap,
     retract(playerLoc(_, _)),

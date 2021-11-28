@@ -76,9 +76,16 @@ generateItem(Qtype, Item):-
     random(0, Len, Idx),
     nth0(Idx, L, Item), !.
 
+typeQuestCompleted(Type):- 
+    questProgress(Type, X), 
+    questTarget(Type, Y), 
+    X >= Y, !.
 
 allQuestCompleted:- 
-    (playerRole(Type)), \+ (questProgress(Type, X), questTarget(Type, Y), X < Y).
+    typeQuestCompleted(fish),
+    typeQuestCompleted(farm),
+    typeQuestCompleted(ranch), !.
+
 
 generateQuestTarget:-
     generateDifficulty(fish, DifficultyFish),
@@ -137,3 +144,26 @@ addProgress(Item, Inc):-
     X_new is min(X+Inc, Y),
     retract(questProgress(Type, _)),
     asserta(questProgress(Type, X_new)), !.
+
+
+reward:-
+    allQuestCompleted,
+    generateDifficulty(fish, FishDifficulty),
+    generateDifficulty(ranch, RanchDifficulty),
+    generateDifficulty(farm, FarmDifficulty),
+    playerLevel(fish, FishLevel),
+    playerLevel(ranch, RanchLevel),
+    playerLevel(farm, FarmLevel),
+    TotalDiff is (FishDifficulty + RanchDifficulty + FarmDifficulty),
+    random(100, 200, MultFish),
+    IncFishExp is FishDifficulty*20 + FishLevel*MultFish,
+    random(100, 200, MultRanch),
+    IncRanchExp is RanchDifficulty*20 + RanchLevel*MultRanch,
+    random(100, 200, MultFarm),
+    IncFarmExp is FarmDifficulty*20 + FarmLevel*MultFarm,
+    IncExp is TotalDiff*100,
+    write('\nCongratulations, you earn '), write(IncExp), write(' Exp\n'),
+    write('You also gain '), write(IncFishExp), write(' Exp of fishing experiences, '),
+    write(IncRanchExp), write(' Exp of ranching experiences, and '), 
+    write(IncFarmExp), write(' Exp of farming experiences, \n'),
+    write('\nThat\'s a lot of experiences! it makes you even more excited to work, doesn\'t it?\n'), !.

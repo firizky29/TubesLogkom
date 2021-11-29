@@ -19,6 +19,12 @@ itemType(telur,ranch).
 itemType(sutra,ranch).
 itemType(susu,ranch).
 
+itemType(farmPotion, alchemist).
+itemType(fishPotion, alchemist).
+itemType(ranchPotion, alchemist).
+itemType(bottleExp, alchemist).
+itemType(fatigueCure, alchemist).
+
 
 % Inventory 
 inventory(arwana, fish, 0).
@@ -41,6 +47,11 @@ inventory(bibit_tomat, seed, 0).
 inventory(telur, produce, 0).
 inventory(sutra, produce, 0).
 inventory(susu, produce, 0).
+inventory(farmPotion, alchemist, 0).
+inventory(fishPotion, alchemist, 0).
+inventory(ranchPotion, alchemist, 0).
+inventory(bottleExp, alchemist, 0).
+inventory(fatigueCure, alchemist, 0).
 
 % Harga Jual
 price(arwana, 100).
@@ -65,6 +76,14 @@ price(bibit_tomat, 4).
 price(ayam, 200).
 price(domba, 300).
 price(sapi, 400).
+
+price(farmPotion, 5000).
+price(fishPotion, 5000).
+price(ranchPotion, 5000).
+price(bottleExp, 6500).
+price(fatigueCure, 500).
+
+
 %  Harga Upgrade Equipment
 price_upgrade_to(shovel,1,200).
 price_upgrade_to(shovel,2,400).
@@ -122,6 +141,66 @@ throwItem :-
 
 throwItem.
 
+usePotion :-
+    forall(inventory(_,alchemist,Count), Count =:= 0),
+    write('-. You dont have any potion(s)!'),!;
+    findall(Items, (inventory(Items, alchemist, Y), Y>0), L), 
+    length(L, Len),
+    forall((between(1, Len, I), nth1(I, L, Item), inventory(Item, alchemist, X)), (
+        write(I), write('. '), write(Item), write(' | Count: '), write(X), nl
+    )),
+    write('Type the name of potion you wish to use?\n'),
+    write('\n>>> '),
+    read(Potion), 
+    effectPotion(Potion),
+    !.
+
+effectPotion(ranchPotion):-
+    gainExp(ranch, 1000),
+    write('Wow, you gained 1000 ranching Exp!\n'), 
+    retract(inventory(ranchPotion, _, X)),
+    X_New is X-1,
+    asserta(inventory(ranchPotion, _, X_New)),
+    !.
+
+effectPotion(fishPotion):-
+    gainExp(fish, 1000),
+    write('Wow, you gained 1000 fishing Exp!\n'), 
+    retract(inventory(fishPotion, _, X)),
+    X_New is X-1,
+    asserta(inventory(fishPotion, _, X_New)),
+    !.
+
+effectPotion(farmPotion):-
+    gainExp(farm, 1000),
+    write('Wow, you gained 1000 farming Exp!\n'), 
+    retract(inventory(farmPotion, _, X)),
+    X_New is X-1,
+    asserta(inventory(farmPotion, _, X_New)),
+    !.
+
+effectPotion(bottleExp):-
+    gainExp(total, 2000),
+    write('Wow, you gained 2000 Exp!\n'), 
+    retract(inventory(bottleExp, _, X)),
+    X_New is X-1,
+    asserta(inventory(bottleExp, _, X_New)),
+    !.
+
+effectPotion(fatigueCure):-
+    retract(drainedEnergy(_)),
+    asserta(drainedEnergy(2)),
+    playerLevel(total, Level),
+    En is Level*100,
+    retract(playerEnergy(_)),
+    asserta(playerEnergy(En)),
+    write('\nYou cured from the fatigue! cool!\n'),
+    retract(inventory(fatigueCure, _, X)),
+    X_New is X-1,
+    asserta(inventory(fatigueCure, _, X_New)),  !.
+
+effectPotion(_):-
+    write('It is not a valid potion'), !.
 
 throw_choice(ITEM) :-
     inventory(ITEM,_TYPE,Y),

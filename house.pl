@@ -20,6 +20,7 @@
 :- dynamic(animal_production/3).
 :- dynamic(playerEnergy/2).
 :- dynamic(drainedEnergy/2).
+:- dynamic(stock/3).
 
 day(1).
 save([]).
@@ -48,6 +49,12 @@ sleep :-
     En is Level*100,
     retract(playerEnergy(_)),
     asserta(playerEnergy(En)),
+    random(1, 10, Rand),
+    (
+        Rand > 9,
+        restock, !;
+        !
+    ),
     random(1,4,Z),
     (
         Z =:= 1, 
@@ -74,7 +81,9 @@ peri :-
     (A=:=1, 
         write('- marketplace\n'),
         write('- ranch\n'),
-        write('- quest\n'), nl,
+        write('- quest\n'), 
+        write('- alchemist\n'), 
+        nl,
         write('>> '), read(PLACE), nl,
         tile(X1,Y1,PLACE),
         retract(playerLoc(_,_)),
@@ -82,7 +91,7 @@ peri :-
         write('Anda berhasil teleport ke '), write(PLACE);
     A=:=2, 
         teleport
-    ).
+    ), !.
     
 teleport :- 
     write('Absis >> '), read(X),
@@ -142,7 +151,8 @@ writeDiary :-
         retractall(animal_count(Day,_,_)),
         retractall(animal_production(Day,_,_)),
         retractall(playerEnergy(Day, _)),
-        retractall(drainedEnergy(Day, _))
+        retractall(drainedEnergy(Day, _)),
+        retractall(stock(Day, _,_))
     ;
         append(List, [Day], NewList),
         retract(save(_)),
@@ -164,6 +174,7 @@ writeDiary :-
     forall(animal_production(O1,O2), asserta(animal_production(Day,O1,O2))),
     forall(playerEnergy(En), asserta(playerEnergy(Day, En))),
     forall(drainedEnergy(Dr), asserta(drainedEnergy(Day, Dr))),
+    forall(stock(Items, Stock), asserta(stock(Day, Items, Stock))),
     retract(save(_)),
     asserta(save(NewList)),
     write('Game anda telah tersimpan pada diary ! Tetap semangat !'), nl,
@@ -215,6 +226,7 @@ loadData(Day) :-
     retractall(animal_production(_,_)),
     retractall(playerEnergy(_)),
     retractall(drainedEnergy(_)),
+    retractall(stock(_, _)),
     
     % assert all
     
@@ -234,7 +246,9 @@ loadData(Day) :-
     forall(animal_count(Day,N1,N2), asserta(animal_count(N1,N2))),
     forall(animal_production(Day,O1,O2), asserta(animal_production(O1,O2))),
     forall(playerEnergy(Day,En), asserta(playerEnergy(En))),
-    forall(drainedEnergy(Day, Dr), asserta(drainedEnergy(Dr))), !.
+    forall(drainedEnergy(Day, Dr), asserta(drainedEnergy(Dr))), 
+    forall(stock(Day, Items, Stock), asserta(stock(Items, Stock))),
+    !.
 
 fatigue(Energy):-
     playerLevel(total, Level),

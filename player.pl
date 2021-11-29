@@ -21,15 +21,15 @@ roleDisplay(ranch, 'Rancher').
 % reqexp(level, N) : reqierementXP
 
 reqexp(_, 0, 0).
-reqexp(_, 1, 300).
-reqexp(_, 2, 700).
-reqexp(_, 3, 1500).
-reqexp(_, 4, 3100).
-reqexp(_, 5, 6300).
-reqexp(_, 6, 12700).
-reqexp(_, 7, 25500).
-reqexp(_, 8, 51100).
-reqexp(_, 9, 102300).
+reqexp(_, 1, 400).
+reqexp(_, 2, 1600).
+reqexp(_, 3, 6400).
+reqexp(_, 4, 12700).
+reqexp(_, 5, 40000).
+reqexp(_, 6, 100000).
+reqexp(_, 7, 255000).
+reqexp(_, 8, 511000).
+reqexp(_, 9, 1023000).
 reqexp(_, 10, 'INF').
 
 playerLevel(Type, Level):-

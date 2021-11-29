@@ -93,6 +93,11 @@ fish:-
     write('You run out of energy!, go to home to get some sleep immediately!\n'), !.
 
 fish :-
+    capacity(Capacity),
+    Capacity >= 100,
+    write('You don\'t have enough space in your inventory, if you got a fish it will be a waste, throw or sell some of it!\n'), !.
+
+fish :-
     isAroundWater,
     fishListGenerator(L),
     length(L, Len),

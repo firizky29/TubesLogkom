@@ -81,8 +81,7 @@ writeinvent(NAME, equipment, LV) :-
 writeinvent(NAME, seed, COUNT) :-
     inventory(NAME, seed, COUNT),
     COUNT > 0,
-    plantOfSeed(NAME, PLANT),
-    write('-  '), write(COUNT), write(' '), write(PLANT), write(' seed'), nl, !. 
+    write('-  '), write(COUNT), write(' '), write(NAME), nl, !. 
 
 writeinvent(NAME, _, COUNT) :-
     COUNT > 0,
@@ -109,6 +108,8 @@ capacity(X) :-
 
 throwItem :-
     inventory,
+    capacity(Cap),
+    Cap > 0,
     nl, write('Apa yang ingin anda buang? (nama item)'), nl, nl,
     write('>> '),read(ITEM), nl,
     (ITEM == fishing_rod, 
@@ -119,13 +120,17 @@ throwItem :-
     ),
     !.
 
+throwItem.
+
+
 throw_choice(ITEM) :-
     inventory(ITEM,_TYPE,Y),
     write('Berapa banyak '), write(ITEM), write(' yang ingin anda buang?'), nl,
     nl, write('>> '),
     read(X),
     nl,
-    (
+    (   
+        Y >= X,
         retract(inventory(ITEM,_TYPE,Y)), Z is Y-X,    
         asserta(inventory(ITEM,_TYPE,Z)),
         write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dibuang');

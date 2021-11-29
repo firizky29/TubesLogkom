@@ -82,6 +82,11 @@ increaseRanchingExp(ProductionCount, Exp, Item) :-
     itemExp(Item, Gain),
     Exp is ProductionCount * Gain, !.
 
+viewAnimal(_) :-
+    capacity(Capacity),
+    Capacity >= 100,
+    write('You have no capacity to store the products yield by animal, better sell or throw some first!'), nl, !.
+
 viewAnimal(ayam) :-
     playerLoc(X,Y),
     tile(X,Y,ranch),

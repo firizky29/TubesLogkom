@@ -127,8 +127,12 @@ harvest:-
     inventory(Plant, gardening, PrevCount),
     plantData(X,Y,_,_,DayAbleToHarvest),
     day(Day),
-    DayAbleToHarvest =< Day, 
+    DayAbleToHarvest =< Day,
+    capacity(Capacity),
+    Capacity < 100, 
     NewCount is PrevCount + 1,
+    retract(capacity(Capacity)),
+    asserta(capacity(Capacity + 1)),
     retract(inventory(Plant, gardening, _)),
     asserta(inventory(Plant, gardening, NewCount)),
     write('You managed to harvest a(n) '),
@@ -155,6 +159,13 @@ harvest:-
     write(' to harvest '),
     write(Plant),
     !.
+
+harvest :-
+    playerLoc(X,Y),
+    tile(X,Y,_),
+    capacity(Capacity),
+    Capacity >= 100,
+    write('You have no more space in your inventory. You can sell or throw some of them'), nl, !.
 
 harvest:-
     write('You have nothing to be harvested in this tile\n'), !.

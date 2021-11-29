@@ -141,19 +141,27 @@ upgrade_choice(ITEM, LV) :-
     write('Uang anda tidak mencukupi !!')).
 
 tampilinventory :- 
-    forall(inventory(X, fish, _A), writeinvent(X,_, _A)),
-    forall(inventory(Y, gardening, _B), writeinvent(Y,_, _B)),
-    forall(inventory(Z, produce, _C), writeinvent(Z,_, _C)),
+    forall(inventory(X, fish, A), writeinvent(X,_, A)),
+    forall(inventory(Y, gardening, B), writeinvent(Y,_, B)),
+    forall(inventory(Z, produce, C), writeinvent(Z,_, C)),
     !.
+
+sellempty :-
+    forall(inventory(_,fish,Count1), Count1 =:= 0),
+    forall(inventory(_,gardening,Count2), Count2 =:= 0),
+    forall(inventory(_,produce,Count3), Count3 =:= 0).
 
 sell :- 
     playerLoc(X,Y),
     tile(X,Y,marketplace), 
     write('Anda memiliki beberapa item di inventory :'),nl,nl,
-    tampilinventory,
-    nl, write('Apa yang ingin anda jual? (nama item)'),nl,nl,
-    write('>> '),read(ITEM), nl,
-    sell_choice(ITEM),
+    (sellempty,
+        write('Anda tidak memiliki barang apapun');
+        tampilinventory,
+        nl, write('Apa yang ingin anda jual? (nama item)'),nl,nl,
+        write('>> '),read(ITEM), nl,
+        sell_choice(ITEM)
+    ),
     !.
     
 

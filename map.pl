@@ -254,19 +254,7 @@ printCoor(X, Y):-
     write(CharID),
     !. 
 
-printInfoMap:-
-    playerLoc(XP, YP),
-    tile(XP, YP, empty),
-    write('\nLegend:\n'),
-    write('=================================================================\n'),
-    write('P : Your current position\n'),
-    write('H : Your house\n'),
-    write('M : marketplace\n'),
-    write('R : Ranch\n'),
-    write('Q : Active quest\n'),
-    write('A : Potion store\n'),
-    write('o : Water\n'), 
-    !.
+
 
 printInfoMap:-
     playerLoc(XP, YP),
@@ -333,6 +321,18 @@ printInfoMap:-
     write('R : Ranch\n'),
     write('Q : Active quest\n'),
     write('o : Water\n'), !.
+
+printInfoMap:-
+    write('\nLegend:\n'),
+    write('=================================================================\n'),
+    write('P : Your current position\n'),
+    write('H : Your house\n'),
+    write('M : marketplace\n'),
+    write('R : Ranch\n'),
+    write('Q : Active quest\n'),
+    write('A : Potion store\n'),
+    write('o : Water\n'), 
+    !.
 
 map:-
     widthMap(W),

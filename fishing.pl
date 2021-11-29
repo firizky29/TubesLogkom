@@ -94,7 +94,7 @@ fish:-
 
 fish :-
     capacity(Capacity),
-    Capacity => 100,
+    Capacity >= 100,
     write('You don\'t have enough space in your inventory, if you got a fish it will be a waste, throw or sell some of it!\n'), !.
 
 fish :-

@@ -13,5 +13,6 @@
 1. Install GNU Prolog (http://www.gprolog.org/)
 2. Clone repository ini (https://github.com/firizky29/TubesLogkom.git)
 3. Jalankan main.pl (Klik 2 kali lalu pilih GNU prolog)
-4. Ketik startGame pada program
-5. Game telah dimulai, Selamat bermain :)
+4. Ketik startGame pada program untuk mengaktifkan program
+5. Ketik start pada program untuk memulai permainan
+6. Game telah dimulai, Selamat bermain :)

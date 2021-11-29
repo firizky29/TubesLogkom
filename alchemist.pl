@@ -13,7 +13,6 @@ initStock:-
     asserta(stock(farmPotion, 2)),
     asserta(stock(fishPotion, 4)),
     asserta(stock(ranchPotion, 3)),
-    asserta(stock(changeRole, 1)),
     asserta(stock(bottleExp, 1)),
     asserta(stock(fatigueCure, 25)), !.
 

@@ -81,7 +81,9 @@ peri :-
     (A=:=1, 
         write('- marketplace\n'),
         write('- ranch\n'),
-        write('- quest\n'), nl,
+        write('- quest\n'), 
+        write('- alchemist\n'), 
+        nl,
         write('>> '), read(PLACE), nl,
         tile(X1,Y1,PLACE),
         retract(playerLoc(_,_)),
@@ -89,7 +91,7 @@ peri :-
         write('Anda berhasil teleport ke '), write(PLACE);
     A=:=2, 
         teleport
-    ).
+    ), !.
     
 teleport :- 
     write('Absis >> '), read(X),

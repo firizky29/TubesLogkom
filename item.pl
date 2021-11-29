@@ -139,6 +139,16 @@ throwItem :-
     ),
     !.
 
+usePotion :-
+    forall(inventory(_,alchemist,Count), Count =:= 0),
+    write('-. You dont have any potion(s)!'),!;
+    findall(Items, (inventory(Items, alchemist, Y), Y>0), L), 
+    length(L, Len),
+    forall((between(1, Len, I), nth1(I, L, Item), inventory(Item, alchemist, X)), (
+        write(I), write('. '), write(Item), write(' | Count: '), write(X), nl
+    )), 
+    !.
+
 throw_choice(ITEM) :-
     inventory(ITEM,_TYPE,Y),
     write('Berapa banyak '), write(ITEM), write(' yang ingin anda buang?'), nl,

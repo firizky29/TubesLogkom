@@ -42,6 +42,11 @@ increaseFarmingExp(Exp):-
     random(20, 31, Mult),
     Exp is (Mult*ShovelLevel), !.
 
+dig:- 
+    playerEnergy(Energy),
+    Energy < 10,
+    write('You run out of energy!, go to home to get some sleep immediately!\n'), !.
+
 dig:-
     inventory(shovel, _, 0),
     write('\nYou have to buy a shovel before you dig, go to marketplace to look for it\n'), !.
@@ -51,11 +56,13 @@ dig:-
     tile(X,Y,empty),
     retract(tile(X,Y,_)),
     asserta(tile(X,Y,digged)),
+    lossEnergy(farm),
     write('You dug a hole!'), nl,!.
 
 dig:-
     playerLoc(X,Y),
     tile(X,Y,digged),
+    lossEnergy(farm),
     write('\nYou\'re already digged it, you just wasted your energy\n'), !.
 
 dig:-
@@ -108,6 +115,11 @@ plantAttempt(Input):-
     write(' seed. Try Again.'), nl, !.
 
 
+
+harvest:-
+    playerEnergy(Energy),
+    Energy < 10,
+    write('You run out of energy!, go to home to get some sleep immediately!\n'), !.
 
 harvest:-
     playerLoc(X,Y),

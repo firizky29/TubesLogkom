@@ -2,9 +2,13 @@
 :- dynamic(playerRole/1).
 :- dynamic(playerExp/2).
 :- dynamic(money/1).
+:- dynamic(playerEnergy/1).
+:- dynamic(drainedEnergy/1).
 
 playerRole(0).
 playerExp(0, 0).
+playerEnergy(0).
+drainedEnergy(0).
 money(0).
 
 % fakta-fakta dari player
@@ -107,11 +111,15 @@ initPlayer(Idx):-
     asserta(playerExp(fish, 0)),
     asserta(playerExp(ranch, 0)),
     asserta(playerExp(farm, 0)),
+    retract(playerEnergy(_)),
+    asserta(playerEnergy(100)),
+    retract(drainedEnergy(_)),
+    asserta(drainedEnergy(2)),
     !.
 
 printRole(Idx):-
     idRole(Idx, fish),
-    write('\nYou choose fisherman, let\'s start farming! (and fishing ofcourse)\n'), !.
+    write('\nYou choose fisherman, let\'s start farming! (and fishing of course)\n'), !.
 
 printRole(Idx):-
     idRole(Idx, farm),
@@ -119,7 +127,7 @@ printRole(Idx):-
 
 printRole(Idx):-
     idRole(Idx, ranch),
-    write('\nYou choose rancher, let\'s start farming! (and ranching ofcourse)'), !.
+    write('\nYou choose rancher, let\'s start farming! (and ranching of course)'), !.
 
 gainExp(Type, Inc):- 
     playerExp(Type, Exp),
@@ -128,5 +136,21 @@ gainExp(Type, Inc):-
     asserta(playerExp(Type, New_Exp)),
     !.
 
+lossEnergy(Type):-
+    playerRole(Type),
+    playerEnergy(Energy),
+    drainedEnergy(Loss),
+    Losses is 80*Loss div 100,
+    New_Energy is max(Energy-Losses, 0),
+    retract(playerEnergy(_)),
+    asserta(playerEnergy(New_Energy)),
+    !.
 
+lossEnergy(_):-
+    playerEnergy(Energy),
+    drainedEnergy(Loss),
+    New_Energy is max(Energy-Loss, 0),
+    retract(playerEnergy(_)),
+    asserta(playerEnergy(New_Energy)),
+    !.
 

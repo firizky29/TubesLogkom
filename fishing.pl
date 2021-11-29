@@ -82,9 +82,15 @@ fishGenerator:-
     )),
     !.
 
+
 fish:-
     inventory(fishing_rod, _, 0),
     write('\nYou have to buy a fishing rod before you fish, you can buy it at the marketplace\n'), !.
+
+fish:-
+    playerEnergy(Energy),
+    Energy < 10,
+    write('You run out of energy!, go to home to get some sleep immediately!\n'), !.
 
 fish :-
     isAroundWater,
@@ -92,6 +98,7 @@ fish :-
     length(L, Len),
     random(0,Len,Idx),
     nth0(Idx, L, FishFished),
+    lossEnergy(fish),
     gotFishInterface(FishFished), !.
 
 fish :-

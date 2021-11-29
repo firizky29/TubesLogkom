@@ -18,6 +18,8 @@
 :- dynamic(questProgress/3).
 :- dynamic(animal_count/3).
 :- dynamic(animal_production/3).
+:- dynamic(playerEnergy/2).
+:- dynamic(drainedEnergy/2).
 
 day(1).
 save([]).
@@ -41,6 +43,11 @@ sleep :-
     asserta(day(TOMORROW)),
     write('Hari yang melelahkan, waktunya untuk tidur...'), nl,
     nl,
+    playerEnergy(Energy),
+    playerLevel(total, Level),
+    En is Level*100,
+    retract(playerEnergy(_)),
+    asserta(playerEnergy(En)),
     random(1,4,Z),
     (
         Z =:= 1, 
@@ -50,6 +57,7 @@ sleep :-
         write('Sudah hari ke-'), write(TOMORROW), write('.'),
         nl, nl, nl
     ), 
+    fatigue(Energy),
     failGame(TOMORROW), !.
 
 house_choice(sleep) :-
@@ -118,7 +126,9 @@ writeDiary :-
         retractall(questTargetItem(Day,_,_)), 
         retractall(questProgress(Day,_,_)),
         retractall(animal_count(Day,_,_)),
-        retractall(animal_production(Day,_,_))
+        retractall(animal_production(Day,_,_)),
+        retractall(playerEnergy(Day, _)),
+        retractall(drainedEnergy(Day, _))
     ;
         append(List, [Day], NewList)
     ),
@@ -136,6 +146,8 @@ writeDiary :-
     forall(questProgress(M1,M2), asserta(questProgress(Day,M1,M2))),
     forall(animal_count(N1,N2), asserta(animal_count(Day,N1,N2))),
     forall(animal_production(O1,O2), asserta(animal_production(Day,O1,O2))),
+    forall(playerEnergy(En), asserta(playerEnergy(Day, En))),
+    forall(drainedEnergy(Dr), asserta(drainedEnergy(Day, Dr))),
     retract(save(_)),
     asserta(save(NewList)),
     write('Game anda telah tersimpan pada diary ! Tetap semangat !'), nl,
@@ -189,6 +201,8 @@ loadData(Day) :-
     retractall(questProgress(_,_)),
     retractall(animal_count(_,_)),
     retractall(animal_production(_,_)),
+    retractall(playerEnergy(_)),
+    retractall(drainedEnergy(_)),
     
     % assert all
     
@@ -206,4 +220,18 @@ loadData(Day) :-
     forall(questTargetItem(Day,L1,L2), asserta(questTargetItem(L1,L2))),
     forall(questProgress(Day,M1,M2), asserta(questProgress(M1,M2))),
     forall(animal_count(Day,N1,N2), asserta(animal_count(N1,N2))),
-    forall(animal_production(Day,O1,O2), asserta(animal_production(O1,O2))).
+    forall(animal_production(Day,O1,O2), asserta(animal_production(O1,O2))),
+    forall(playerEnergy(Day,En), asserta(playerEnergy(En))),
+    forall(drainedEnergy(Day, Dr), asserta(drainedEnergy(Dr))), !.
+
+fatigue(Energy):-
+    playerLevel(total, Level),
+    Energy< 25*Level,
+    retract(drainedEnergy(X)),
+    X_new is X+Level*2,
+    asserta(drainedEnergy(X_new)),
+    write('\nOh No, due to the excessive work yesterday, you will drain your energy a little bit faster today\n'), !.
+
+fatigue(_):-
+    retract(drainedEnergy(_)),
+    asserta(drainedEnergy(2)), !.

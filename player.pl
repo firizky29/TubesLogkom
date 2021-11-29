@@ -2,8 +2,6 @@
 :- dynamic(playerRole/1).
 :- dynamic(playerExp/2).
 :- dynamic(money/1).
-:- dynamic(growthExp/2).
-
 
 playerRole(0).
 playerExp(0, 0).

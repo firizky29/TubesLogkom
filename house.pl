@@ -18,7 +18,7 @@ house :-
 house_choice(sleep) :- 
     playerLoc(X,Y),
     tile(X,Y,house),
-    retract(day(TODAY)), TOMORROW is TODAY+1,
+    retract(day(TODAY)), TOMORROW is TODAY+120,
     asserta(day(TOMORROW)),
     write('Hari yang melelahkan, waktunya untuk tidur...'), nl,
     nl,
@@ -27,11 +27,12 @@ house_choice(sleep) :-
         Z =:= 1, peri;
         write('Hoaammmm...'), nl,
         write('Sudah hari ke-'), write(TOMORROW), write('.'),
-        nl, nl, house
-    ), !.
+        nl, nl, nl
+    ), 
+    failGame(TOMORROW), !.
 
 house_choice(sleep) :-
-    write('Anda tidak sedang berada di hehe !').
+    write('Anda tidak sedang berada di rumah!').
 
 house_choice(exit).
 

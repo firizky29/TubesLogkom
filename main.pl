@@ -158,6 +158,7 @@ w:-
     X1 is X-1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X1, Y)),
+    write('\nYou moved north'), nl, 
     !.
 
 s :- 
@@ -181,6 +182,7 @@ s:-
     X1 is X+1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X1, Y)),
+    write('\nYou moved south'), nl,
     !.
 
 a :- 
@@ -203,6 +205,7 @@ a:-
     Y1 is Y-1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X, Y1)),
+    write('\nYou moved west'), nl, 
     !.
 
 d :-
@@ -226,21 +229,29 @@ d:-
     Y1 is Y+1,
     retract(playerLoc(_, _)),
     asserta(playerLoc(X, Y1)),
+    write('\nYou moved east'), nl, 
     !.
 
 
 % END GAME
 goalGame(MONEY) :-
     MONEY >= 20000,
-    write('Congratulations! You have finally collected 20000 golds!'), nl,
+    write('\nCongratulations! You have finally reached the goal of this farm-thingy!'), nl,
+    write('Now all of your debts can finally be paid'), nl,
+    write('\n\nIn the end, all this journey is valuable for you, \nand you will continue to work hard no matter what the conditions you are in'),
     retract(gameState(_)),
     asserta(gameState(0)),
     retract(inGameState(_)),
     asserta(inGameState(0)),
     !.
 
+goalGame(_):-
+    !.
+
 failGame(DAY) :-
-    DAY =:= 120,
+    DAY >= 120,
+    write('oh no, because the time limit has passed,') ,
+    write('\nthe debt lenders unexpectedly force you to collect your debt directly to your farm.'),
     write('You have worked hard, but in the end result is all that matters.'),nl,
     write('May God bless you in the future with kind people!'),nl,
     retract(gameState(_)),
@@ -248,3 +259,5 @@ failGame(DAY) :-
     retract(inGameState(_)),
     asserta(inGameState(0)),
     !.
+
+failGame(_):- !.

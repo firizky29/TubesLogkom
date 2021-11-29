@@ -181,6 +181,6 @@ sell_choice(ITEM) :-
         retract(inventory(ITEM,_TYPE,Y)), Z is Y-X,    
         asserta(inventory(ITEM,_TYPE,Z)),
         write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dijual seharga '), write(MONEY_GAIN), write(' gold !'),
-        nl,nl, write('Uang anda sekarang : '), write(MONEY_AFTER), write(' gold');
+        nl,nl, write('Uang anda sekarang : '), write(MONEY_AFTER), write(' gold'), goalGame(MONEY_AFTER);
         write('Jumlah barang di inventory kamu kurang dari '), write(X)
     ), !.

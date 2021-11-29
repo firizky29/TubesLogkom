@@ -5,6 +5,7 @@
 
 questTarget(_, 0).
 questProgress(_, 0).
+questTargetItem(0, 0).
 
 targetBound(1, 1, 6).  %difficulty, lower bound target, upper bound target
 targetBound(2, 5, 11).

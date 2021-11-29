@@ -162,7 +162,7 @@ harvest:-
 
 harvest :-
     playerLoc(X,Y),
-    tile(X,Y,Plant),
+    tile(X,Y,_),
     capacity(Capacity),
     Capacity >= 100,
     write('You have no more space in your inventory. You can sell or throw some of them'), nl, !.

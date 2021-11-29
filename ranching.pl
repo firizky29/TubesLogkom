@@ -84,7 +84,7 @@ increaseRanchingExp(ProductionCount, Exp, Item) :-
 
 viewAnimal(_) :-
     capacity(Capacity),
-    Capacity => 100,
+    Capacity >= 100,
     write('You have no capacity to store the products yield by animal, better sell or throw some first!'), nl, !.
 
 viewAnimal(ayam) :-

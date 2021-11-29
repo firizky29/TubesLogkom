@@ -102,7 +102,12 @@ help :-
     write('11. plant        : untuk menanam tanaman '), nl,
     write('12. harvest      : untuk panen '), nl,
     write('13. inventory    : untuk memperlihatkan isi inventory '), nl,
-    write('14. status       : untuk memperlihatkan status player '), !.
+    write('14. status       : untuk memperlihatkan status player '), nl,
+    write('15. buy          : untuk membeli item (hanya dapat dilakukan di marketplace)'),nl,
+    write('16. sell         : untuk mmenjual item (hanya dapat dilakukan di marketplace)'),nl,
+    write('17. potion       : untuk membeli potion (hanya dapat dilakukan di Alchemist)'),nl,
+    write('18. usePotion    : untuk membeli item (hanya dapat dilakukan di marketplace)'),nl,
+    !.
 
 
 status :-
@@ -120,8 +125,11 @@ status :-
     playerExp(ranch, RanchExp),
     playerExp(farm, FarmExp),
     reqexp(total, Level, ReqExp),
+    playerEnergy(Energy),
+    day(Day),
     money(Gold),
 
+    write('Day              : '), write(Day),nl,
     write('Job              : '), write(PlayerRole), nl,
     write('Level            : '), write(Level), nl,
     write('Farming level    : '), write(FarmLevel), nl,
@@ -131,6 +139,7 @@ status :-
     write('Ranching level   : '), write(RanchLevel), nl,
     write('Ranching Exp     : '), write(RanchExp), nl,
     write('Exp              : '), write(Exp), write('/'), write(ReqExp), nl,
+    write('Energy           : '), write(Energy),nl,
     write('Gold             : '), write(Gold), nl, !.
 
 status :-

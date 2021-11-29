@@ -19,6 +19,13 @@ itemType(telur,ranch).
 itemType(sutra,ranch).
 itemType(susu,ranch).
 
+itemType(farmPotion, alchemist).
+itemType(fishPotion, alchemist).
+itemType(ranchPotion, alchemist).
+itemType(changeRole, alchemist).
+itemType(bottleExp, alchemist).
+itemType(fatigueCure, alchemist).
+
 
 % Inventory 
 inventory(arwana, fish, 0).
@@ -42,6 +49,12 @@ inventory(bibit_tomat, seed, 0).
 inventory(telur, produce, 0).
 inventory(sutra, produce, 0).
 inventory(susu, produce, 0).
+inventory(farmPotion, alchemist, 0).
+inventory(fishPotion, alchemist, 0).
+inventory(ranchPotion, alchemist, 0).
+inventory(changeRole, alchemist, 0).
+inventory(bottleExp, alchemist, 0).
+inventory(fatigueCure, alchemist, 0).
 
 % Harga Jual
 price(arwana, 100).
@@ -66,6 +79,15 @@ price(bibit_tomat, 4).
 price(ayam, 200).
 price(domba, 300).
 price(sapi, 400).
+
+price(farmPotion, 5000).
+price(fishPotion, 5000).
+price(ranchPotion, 5000).
+price(changeRole, 10000).
+price(bottleExp, 6500).
+price(fatigueCure, 500).
+
+
 %  Harga Upgrade Equipment
 price_upgrade_to(shovel,1,100).
 price_upgrade_to(shovel,2,100).

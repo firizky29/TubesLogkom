@@ -7,6 +7,7 @@
 :- include('market.pl').
 :- include('fishing.pl').
 :- include('ranching.pl').
+:- include('alchemist.pl').
 :- include('house.pl').
 
 
@@ -65,6 +66,7 @@ start :-
     printRole(Idx),
     initMap,
     fishGenerator,
+    initStock,
     inGameOn,
     !.
 

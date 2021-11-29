@@ -10,6 +10,7 @@ tileSymbol(marketplace, 'M').
 tileSymbol(ranch, 'R').
 tileSymbol(house, 'H').
 tileSymbol(quest, 'Q').
+tileSymbol(alchemist, 'A').
 tileSymbol(water, 'o').
 tileSymbol(digged, '=').
 tileSymbol(kentang, 'k').
@@ -123,11 +124,17 @@ buildMap:-
     asserta(tile(XQ, YQ, quest)),
     generateQuestTarget,
 
+    % Build Alchemist Store
+    length(T5, Len5),
+    random(0, Len5, IdxAlchemist),
+    deleteAt(T5, (XA, YA), IdxAlchemist, L5),
+    deleteNeighborof(XA, YA, L5, T6),
+    retract(tile(XA, YA, _)),
+    asserta(tile(XA, YA, alchemist)),
+
     retract(listOfEmptyTile(_)),
-    asserta(listOfEmptyTile(T5)),
+    asserta(listOfEmptyTile(T6)),
     
-    % TODO: Initialize First Quest
-    % TODO: mekanisme Quest
 
     !.
     
@@ -257,7 +264,9 @@ printInfoMap:-
     write('M : marketplace\n'),
     write('R : Ranch\n'),
     write('Q : Active quest\n'),
-    write('o : Water\n'), !.
+    write('A : Potion store\n'),
+    write('o : Water\n'), 
+    !.
 
 printInfoMap:-
     playerLoc(XP, YP),
@@ -269,6 +278,7 @@ printInfoMap:-
     write('M : marketplace\n'),
     write('R : Ranch\n'),
     write('Q : Active quest\n'),
+    write('A : Potion store\n'),
     write('o : Water\n'), !.
 
 printInfoMap:-
@@ -281,6 +291,7 @@ printInfoMap:-
     write('H : Your house\n'),
     write('R : Ranch\n'),
     write('Q : Active quest\n'),
+    write('A : Potion store\n'),
     write('o : Water\n'), !.
 
 printInfoMap:-
@@ -293,6 +304,7 @@ printInfoMap:-
     write('H : Your house\n'),
     write('M : marketplace\n'),
     write('Q : Active quest\n'),
+    write('A : Potion store\n'),
     write('o : Water\n'), !.
 
 printInfoMap:-
@@ -305,9 +317,22 @@ printInfoMap:-
     write('H : Your house\n'),
     write('M : marketplace\n'),
     write('R : Ranch\n'),
+    write('A : Potion store\n'),
     write('o : Water\n'), !.
 
 
+printInfoMap:-
+    playerLoc(XP, YP),
+    tile(XP, YP, alchemist),
+    write('\nyou are in alchemist house!, this is the place where you can buy any limited edition potion(s)\n'),
+    write('\nLegend:\n'),
+    write('=================================================================\n'),
+    write('P : Your current position\n'),
+    write('H : Your house\n'),
+    write('M : marketplace\n'),
+    write('R : Ranch\n'),
+    write('Q : Active quest\n'),
+    write('o : Water\n'), !.
 
 map:-
     widthMap(W),

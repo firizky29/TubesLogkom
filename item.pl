@@ -103,7 +103,9 @@ capacity(X) :-
     sum_list(LAll, ALL),
     findall(CountEq, inventory(_,equipment,CountEq), LEq),
     sum_list(LEq, Eq),
-    X is ALL - Eq.
+    findall(1, inventory(_,equipment,0), LEqNull),
+    sum_list(LEqNull, EqNull),
+    X is ALL - Eq + 2 - EqNull.
 
 throwItem :-
     inventory,

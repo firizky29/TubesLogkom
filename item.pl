@@ -34,13 +34,12 @@ inventory(lele, fish, 0).
 inventory(mujair, fish, 0).
 inventory(nila, fish, 0).
 inventory(wortel, gardening, 0).
-inventory(lobak, gardening, 1).
-inventory(kentang, gardening, 1).
-inventory(bawang, gardening, 1).
-inventory(tomat, gardening, 1).
-inventory(fishing_rod,equipment,1).
-inventory(shovel,equipment,3).
-inventory(watering,equipment,0).
+inventory(lobak, gardening, 0).
+inventory(kentang, gardening, 0).
+inventory(bawang, gardening, 0).
+inventory(tomat, gardening, 0).
+inventory(fishing_rod,equipment,0).
+inventory(shovel,equipment,0).
 inventory(bibit_wortel, seed, 0).
 inventory(bibit_lobak, seed, 0).
 inventory(bibit_kentang, seed, 0).
@@ -89,12 +88,12 @@ price(fatigueCure, 500).
 
 
 %  Harga Upgrade Equipment
-price_upgrade_to(shovel,1,100).
-price_upgrade_to(shovel,2,100).
-price_upgrade_to(shovel,3,100).
-price_upgrade_to(fishing_rod,1,100).
-price_upgrade_to(fishing_rod,2,100).
-price_upgrade_to(fishing_rod,3,100).
+price_upgrade_to(shovel,1,200).
+price_upgrade_to(shovel,2,400).
+price_upgrade_to(shovel,3,800).
+price_upgrade_to(fishing_rod,1,200).
+price_upgrade_to(fishing_rod,2,400).
+price_upgrade_to(fishing_rod,3,800).
 
 writeinvent(NAME, equipment, LV) :-
     inventory(NAME, equipment, LV),
@@ -117,5 +116,41 @@ writeinvent(_, _, _) :-
 inventory :- 
     forall(inventory(_,_,Count), Count =:= 0),
     write('-. Inventory Kosong !'),!;
+    capacity(CAP),
+    write('Your inventory ('), write(CAP), write(')'), nl, nl,
     forall(inventory(X, _, _A), writeinvent(X, _, _A)),!.
     
+capacity(X) :- 
+    findall(CountAll, inventory(_, _, CountAll), LAll),
+    sum_list(LAll, ALL),
+    findall(CountEq, inventory(_,equipment,CountEq), LEq),
+    sum_list(LEq, Eq),
+    X is ALL - Eq.
+
+throwItem :-
+    inventory,
+    nl, write('Apa yang ingin anda buang? (nama item)'), nl, nl,
+    write('>> '),read(ITEM), nl,
+    (ITEM == fishing_rod, 
+        write('Equiment tidak dapat dibuang');
+     ITEM == shovel, 
+        write('Equiment tidak dapat dibuang');
+     throw_choice(ITEM)
+    ),
+    !.
+
+throw_choice(ITEM) :-
+    inventory(ITEM,_TYPE,Y),
+    write('Berapa banyak '), write(ITEM), write(' yang ingin anda buang?'), nl,
+    nl, write('>> '),
+    read(X),
+    nl,
+    (
+        retract(inventory(ITEM,_TYPE,Y)), Z is Y-X,    
+        asserta(inventory(ITEM,_TYPE,Z)),
+        write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dibuang');
+        write('Jumlah barang di inventory kamu kurang dari '), write(X)
+    ), !.
+
+throw_choice(_) :- 
+    write('Barang tersebut tidak ada !'), !.

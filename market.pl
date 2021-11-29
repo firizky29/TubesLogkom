@@ -78,6 +78,9 @@ buy_choice(ITEM) :-
     write('Berapa banyak '), write(ITEM), write(' yang ingin anda beli?'), nl,
     nl, write('>> '),
     read(X),
+    capacity(Cap),
+    NewCap is X + Cap,
+    NewCap =< 100,
     nl,
     price(ITEM, PRICE),
     A is X*PRICE,
@@ -89,7 +92,11 @@ buy_choice(ITEM) :-
     retract(inventory(ITEM,TYPE,Y)), Z is X+Y,    
     asserta(inventory(ITEM,TYPE,Z)),
     write(ITEM), write(' sebanyak '), write(X), write(' telah berhasil dibeli !'), !; 
-    write('Uang anda tidak mencukupi !!')).
+    write('Uang anda tidak mencukupi !!')),!.
+
+buy_choice(_) :-
+    nl,nl,
+    write('Capacity anda tidak muat !!').
 
 buyanimal_choice(ITEM) :-
     animal_count(ITEM,Y),
@@ -163,6 +170,7 @@ plusSell(PRICE,TYPE,PLUS) :-
     ).
 
 sell_choice(ITEM) :-
+    inventory(ITEM,_TYPE,Y),
     write('Berapa banyak '), write(ITEM), write(' yang ingin anda jual?'), nl,
     nl, write('>> '),
     read(X),
@@ -184,3 +192,6 @@ sell_choice(ITEM) :-
         nl,nl, write('Uang anda sekarang : '), write(MONEY_AFTER), write(' gold'), goalGame(MONEY_AFTER);
         write('Jumlah barang di inventory kamu kurang dari '), write(X)
     ), !.
+
+sell_choice(_) :-
+    write('Masukan salah !!').

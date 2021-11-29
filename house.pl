@@ -108,6 +108,20 @@ cektile(X,Y,RES) :-
 
 cektile(_,_,0).
 
+show_save([]).
+
+show_save([H|T]) :-
+    write('-  Day '), write(H), nl,
+    show_save(T).
+
+isEmpty([]).
+
+isMember(_, [], 0).
+
+isMember(Day, [Day|_], 1) :- !.
+
+isMember(Day, [_|T], RES) :- isMember(Day, T, RES).
+
 writeDiary :-
     nl,
     save(List),
@@ -130,7 +144,9 @@ writeDiary :-
         retractall(playerEnergy(Day, _)),
         retractall(drainedEnergy(Day, _))
     ;
-        append(List, [Day], NewList)
+        append(List, [Day], NewList),
+        retract(save(_)),
+        asserta(save(NewList))
     ),
     forall(plantData(A1,A2,A3,A4,A5), asserta(plantData(Day,A1,A2,A3,A4,A5))),
     forall(fishListGenerator(B), asserta(fishListGenerator(Day,B))),
@@ -153,34 +169,30 @@ writeDiary :-
     write('Game anda telah tersimpan pada diary ! Tetap semangat !'), nl,
     !.
 
-show_save([]).
-
-show_save([H|T]) :-
-    write('-  Day '), write(H), nl,
-    show_save(T).
-
-isMember(_, [], 0).
-
-isMember(Day, [Day|_], 1) :- !.
-
-isMember(Day, [_|T], RES) :- isMember(Day, T, RES).
+readDiary :- 
+    nl,
+    save(List),
+    isEmpty(List),
+    write('Diary anda masih kosong !'),
+    !.
 
 readDiary :-
     nl,
     save(List),
     write('Daftar Diary anda : '), nl,
     show_save(List),
-    write('Anda ingin mengulang pada hari ke ? '), nl,
+    write('Anda ingin mengulang pada hari ke ? ketik \'exit\' untuk keluar '), nl,
     nl,
     write('>> '), read(Day), nl,
-    (isMember(Day, List, 1),
+    (Day == exit
+        ;
+     (isMember(Day, List, 1),
         loadData(Day)
         ;
         write('Masukkan day yang sudah ada simpan !!'),
-        readDiary
+        readDiary),
+        write('Berhasil memuat save game anda ! \nSekarang adalah hari ke-'), write(Day), nl
     ),
-
-    write('Berhasil memuat save game anda ! \nSekarang adalah hari ke-'), write(Day), nl, nl,
     !.
 
 loadData(Day) :-
